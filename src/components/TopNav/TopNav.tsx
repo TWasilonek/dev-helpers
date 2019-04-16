@@ -22,7 +22,7 @@ const TopNav: SFC = () => {
           <Link to="/">Text</Link>
         </List.Item>
         <List.Item>
-          < Link to="/translations">Translations</Link>
+          <Link to="/translations">Translations</Link>
         </List.Item>
       </List>
     </Fragment>
