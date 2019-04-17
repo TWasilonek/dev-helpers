@@ -1,5 +1,5 @@
 import React, { SFC, Fragment } from 'react';
-import { Image, List } from 'semantic-ui-react';
+import { List } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
 const InlineStyle = () => (
