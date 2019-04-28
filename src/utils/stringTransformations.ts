@@ -1,16 +1,26 @@
-export function toUpperCase(value: string) {
-  return value.toUpperCase();
+export function sanitizeSpaces(str: string): string {
+  return str.replace(/\s\s+/g, ' ');
 }
 
-export function toLowerCase(value: string) {
-  return value.toLowerCase();
-}
+export function toUpperCase(str: string): string {
+  return str.trim().toUpperCase();
+};
 
-export function capitalize(value: string) {
-  return value.substr(0, 1).toUpperCase() + value.substr(1);
-}
+export function toLowerCase(str: string): string {
+  return str.trim().toLowerCase();
+};
 
-export function capitalizeAll(value: string) {
-  const words = value.split(' ');
+export function capitalize(str: string): string {
+  const trimmed = str.trim();
+  return trimmed.substr(0, 1).toUpperCase() + trimmed.substr(1);
+};
+
+export function capitalizeAll(str: string): string {
+  const words = str.trim().split(' ');
   return words.map(word => capitalize(word)).join(' ');
-}
+};
+
+export function snakeCase(str: string): string {
+  const words = sanitizeSpaces(str.trim()).split(' ');
+  return words.map(word => word.toLowerCase()).join('_');
+};

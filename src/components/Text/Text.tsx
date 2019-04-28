@@ -1,6 +1,6 @@
 import React, { SFC, Fragment, useState } from 'react';
-import { Form, TextArea, Message, Divider } from 'semantic-ui-react';
-import { toUpperCase, toLowerCase, capitalize, capitalizeAll } from '../../utils/stringTransformations';
+import { Form, TextArea, Message } from 'semantic-ui-react';
+import { toUpperCase, toLowerCase, capitalize, capitalizeAll, snakeCase } from '../../utils/stringTransformations';
 
 const results = [
   {
@@ -19,6 +19,10 @@ const results = [
     name: 'Capitalize all',
     transformation: capitalizeAll,
   },
+  {
+    name: 'Snake case',
+    transformation: snakeCase,
+  },
 ];
 
 const InlineStyle = () => (
@@ -27,10 +31,10 @@ const InlineStyle = () => (
       width: 100%;
     }
     .inputs-wrapper {
-      margin-bottom: 30px;
+      margin-bottom: 1rem;
     }
     .textarea {
-      height: 180px;
+      height: 7rem;
     }
     .results-wrapper {
       display: flex;
@@ -55,6 +59,7 @@ const InlineStyle = () => (
     }
     .ui.message.result pre {
       white-space: normal;
+      word-break: break-word;
     }
   `}
   </style>
@@ -67,7 +72,7 @@ const Text: SFC = () => {
       <InlineStyle />
 
       <div className="section-wrapper">
-        <h2>Text transforms</h2>
+        <h2>Text transformations</h2>
         <Form className="inputs-wrapper">
           <Form.Field>
             <TextArea
@@ -77,8 +82,6 @@ const Text: SFC = () => {
             />
           </Form.Field>
         </Form>
-
-        <Divider />
         
         <div className="results-wrapper">
           {results.map(res => {
