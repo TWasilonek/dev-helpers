@@ -24,3 +24,8 @@ export function snakeCase(str: string): string {
   const words = sanitizeSpaces(str.trim()).split(' ');
   return words.map(word => word.toLowerCase()).join('_');
 };
+
+export function camelCase(str: string): string {
+  const words = sanitizeSpaces(str.trim()).split(' ');
+  return words.map(word => capitalize(word.toLowerCase())).join('');
+};

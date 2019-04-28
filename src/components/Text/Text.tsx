@@ -6,15 +6,16 @@ import {
   capitalize,
   capitalizeAll,
   snakeCase,
+  camelCase,
 } from '../../utils/stringTransformations';
 
 const results = [
   {
-    name: 'Uppercase',
+    name: 'UPPERCASE',
     transformation: toUpperCase,
   },
   {
-    name: 'Lowercase',
+    name: 'lowercase',
     transformation: toLowerCase,
   },
   {
@@ -22,12 +23,16 @@ const results = [
     transformation: capitalize,
   },
   {
-    name: 'Capitalize all',
+    name: 'Capitalize All Words',
     transformation: capitalizeAll,
   },
   {
-    name: 'Snake case',
+    name: 'snake_case',
     transformation: snakeCase,
+  },
+  {
+    name: 'CamelCase',
+    transformation: camelCase,
   },
 ];
 
