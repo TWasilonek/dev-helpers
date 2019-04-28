@@ -14,8 +14,6 @@ import {
   addQuotesToLines,
 } from '../../utils/stringTransformations';
 
-// type QuotesTypes = 'noQuotes' | 'single' | 'double' | string;
-
 const QUOTES_TYPES = {
   NO_QUOTES: '',
   SINGLE: '\'',
@@ -137,7 +135,7 @@ const Text: SFC = () => {
             />
           </Form.Field>
           <Form.Group inline>
-            <label>Quotes type</label>
+            <label>Quotes type:</label>
             <Form.Radio
               label='No quotes'
               value={QUOTES_TYPES.NO_QUOTES}
