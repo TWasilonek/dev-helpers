@@ -1,26 +1,6 @@
 import React, { SFC, Fragment, useState } from 'react';
 import { Form, TextArea, Message, Divider } from 'semantic-ui-react';
-
-function toUpperCase(value: string) {
-  return `${value.toUpperCase()}\n'${value.toUpperCase()}'`
-}
-
-function toLowerCase(value: string) {
-  return `${value.toLowerCase()}\n'${value.toLowerCase()}'`
-}
-
-function capitalize(value: string) {
-  const capitalized = value.substr(0, 1).toUpperCase() + value.substr(1);
-  return `${capitalized}\n'${capitalized}'`
-}
-
-function capitalizeAll(value: string) {
-  const words = value.split(' ');
-  const capitalized = words.map(word => capitalize(word)).join(' ');
-  console.log(capitalized);
-  return `${capitalized}\n'${capitalized}'`
-}
-
+import { toUpperCase, toLowerCase, capitalize, capitalizeAll } from '../../utils/stringTransformations';
 
 const results = [
   {
@@ -39,7 +19,7 @@ const results = [
     name: 'Capitalize all',
     transformation: capitalizeAll,
   },
-]
+];
 
 const InlineStyle = () => (
   <style>{`
@@ -61,6 +41,7 @@ const InlineStyle = () => (
     .ui.message.result {
       width: 30%;
       margin: 0 3% 1rem 0;
+      min-height: 9rem;
     }
     .ui.message.result:last-child {
       margin-top: 0;
@@ -69,9 +50,15 @@ const InlineStyle = () => (
     .ui.message.result:nth-of-type(3) {
       margin-right: 0;
     }
+    .ui.message.result:nth-of-type(3) {
+      margin-right: 0;
+    }
+    .ui.message.result pre {
+      white-space: normal;
+    }
   `}
   </style>
-)
+);
 
 const Text: SFC = () => {
   const [text, setText] = useState('');
@@ -94,16 +81,24 @@ const Text: SFC = () => {
         <Divider />
         
         <div className="results-wrapper">
-          {results.map(res => (
-            <Message className="result" key={res.name}>
-             <Message.Header>{res.name}</Message.Header>
-             <pre>
-               <code>
-                 {res.transformation(text)}
-               </code>
-             </pre>
-            </Message>
-          ))}
+          {results.map(res => {
+            const transformedText = res.transformation(text);
+            return (
+              <Message className="result" key={res.name}>
+              <Message.Header>{res.name}</Message.Header>
+                {transformedText && (
+                  <Fragment>
+                     <pre>
+                      {transformedText}
+                    </pre>
+                    <pre>
+                      {`'${transformedText}'`}
+                    </pre>
+                  </Fragment>
+                )}
+              </Message>
+            );
+          })}
         </div>
       </div>
     </Fragment>
