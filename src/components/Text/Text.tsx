@@ -11,36 +11,52 @@ import {
   camelCase,
   pascalCase,
   tranformsLinesToConstants,
+  addQuotesToLines,
 } from '../../utils/stringTransformations';
+
+// type QuotesTypes = 'noQuotes' | 'single' | 'double' | string;
+
+const QUOTES_TYPES = {
+  NO_QUOTES: '',
+  SINGLE: '\'',
+  DOUBLE: '"',
+};
 
 const results = [
   {
     name: 'UPPERCASE',
     transformation: toUpperCase,
+    addQuotes: true,
   },
   {
     name: 'lowercase',
     transformation: toLowerCase,
+    addQuotes: true,
   },
   {
     name: 'Capitalize first word',
     transformation: capitalize,
+    addQuotes: true,
   },
   {
     name: 'Capitalize All Words',
     transformation: capitalizeAll,
+    addQuotes: true,
   },
   {
     name: 'snake_case',
     transformation: snakeCase,
+    addQuotes: true,
   },
   {
     name: 'camelCase',
     transformation: camelCase,
+    addQuotes: true,
   },
   {
     name: 'PascalCase',
     transformation: pascalCase,
+    addQuotes: true,
   },
   {
     name: 'constant notation',
@@ -104,6 +120,8 @@ const InlineStyle = () => (
 
 const Text: SFC = () => {
   const [text, setText] = useState('');
+  const [quotes, setQuotes] = useState(QUOTES_TYPES.NO_QUOTES);
+
   return (
     <Fragment>
       <InlineStyle />
@@ -118,18 +136,41 @@ const Text: SFC = () => {
               onChange={e => setText(e.currentTarget.value)}
             />
           </Form.Field>
+          <Form.Group inline>
+            <label>Quotes type</label>
+            <Form.Radio
+              label='No quotes'
+              value={QUOTES_TYPES.NO_QUOTES}
+              checked={quotes === QUOTES_TYPES.NO_QUOTES}
+              onChange={() => setQuotes(QUOTES_TYPES.NO_QUOTES)}
+            />
+            <Form.Radio
+              label='Single quotes'
+              value={QUOTES_TYPES.SINGLE}
+              checked={quotes === QUOTES_TYPES.SINGLE}
+              onChange={() => setQuotes(QUOTES_TYPES.SINGLE)}
+            />
+            <Form.Radio
+              label='Double quotes'
+              value={QUOTES_TYPES.DOUBLE}
+              checked={quotes === QUOTES_TYPES.DOUBLE}
+              onChange={() => setQuotes(QUOTES_TYPES.DOUBLE)}
+            />
+          </Form.Group>
         </Form>
 
         <div className="results-wrapper">
           {results.map(res => {
             const transformedText = res.transformation(text);
+            const outputText = res.addQuotes ? addQuotesToLines(transformedText, quotes) : transformedText;
+
             return (
               <Message className="result" key={res.name}>
                 <CopyToClipboard text={transformedText}>
                   <Icon name="copy outline" className="copy" />
                 </CopyToClipboard>
                 <Message.Header>{res.name}</Message.Header>
-                {text && <pre>{transformedText}</pre>}
+                {text && <pre>{outputText}</pre>}
               </Message>
             );
           })}

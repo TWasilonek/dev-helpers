@@ -53,3 +53,14 @@ export function tranformsLinesToConstants(str: string, endingSign: string = '', 
     .map(line => createConstant(line, endingSign, isObjectProp))
     .join('\n');
 }
+
+export function addQuotesToLines(str: string, quotes: string): string {
+  return str
+    .split('\n')
+    .map(line => addQuotes(line, quotes))
+    .join('\n');
+}
+
+export function addQuotes(str: string, quotes: string): string {
+  return `${quotes}${str}${quotes}`;
+}
