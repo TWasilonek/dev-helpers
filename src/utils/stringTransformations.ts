@@ -52,5 +52,4 @@ export function tranformsLinesToConstants(str: string, endingSign: string = '', 
     .split('\n')
     .map(line => createConstant(line, endingSign, isObjectProp))
     .join('\n');
-
 }

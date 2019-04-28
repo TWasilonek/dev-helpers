@@ -109,7 +109,7 @@ describe('String transformations', () => {
     });
   });
 
-  describe.only('createConstant', () => {
+  describe('createConstant', () => {
     const output = 'LOREM_IPSUM = \'loremIpsum\'';
 
     test('transforms string into a constant key=value pair', () => {

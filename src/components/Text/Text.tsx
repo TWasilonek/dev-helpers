@@ -1,5 +1,7 @@
 import React, { SFC, Fragment, useState } from 'react';
-import { Form, TextArea, Message } from 'semantic-ui-react';
+import { Form, TextArea, Message, Icon } from 'semantic-ui-react';
+import CopyToClipboard from 'react-copy-to-clipboard';
+
 import {
   toUpperCase,
   toLowerCase,
@@ -70,6 +72,7 @@ const InlineStyle = () => (
     }
     .ui.message.result {
       width: 30%;
+      position: relative;
       margin: 0 3% 1rem 0;
       min-height: 6rem;
     }
@@ -86,6 +89,14 @@ const InlineStyle = () => (
     .ui.message.result pre {
       white-space: pre-wrap;
       word-break: break-word;
+    }
+    .ui.message.result .copy {
+      position: absolute;
+      right: .7em;
+      top: .7em;
+      margin: 0;
+      cursor: pointer;
+      font-size: 1.2em;
     }
   `}
   </style>
@@ -114,6 +125,9 @@ const Text: SFC = () => {
             const transformedText = res.transformation(text);
             return (
               <Message className="result" key={res.name}>
+                <CopyToClipboard text={transformedText}>
+                  <Icon name="copy outline" className="copy" />
+                </CopyToClipboard>
                 <Message.Header>{res.name}</Message.Header>
                 {text && <pre>{transformedText}</pre>}
               </Message>
