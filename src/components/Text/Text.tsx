@@ -8,6 +8,7 @@ import {
   snakeCase,
   camelCase,
   pascalCase,
+  tranformsLinesToConstants,
 } from '../../utils/stringTransformations';
 
 const results = [
@@ -38,6 +39,14 @@ const results = [
   {
     name: 'PascalCase',
     transformation: pascalCase,
+  },
+  {
+    name: 'constant notation',
+    transformation: tranformsLinesToConstants,
+  },
+  {
+    name: 'constant notation in a map',
+    transformation: (str: string) => tranformsLinesToConstants(str, ',', true),
   },
 ];
 
@@ -75,7 +84,7 @@ const InlineStyle = () => (
       margin-right: 0;
     }
     .ui.message.result pre {
-      white-space: normal;
+      white-space: pre-wrap;
       word-break: break-word;
     }
   `}
@@ -106,7 +115,7 @@ const Text: SFC = () => {
             return (
               <Message className="result" key={res.name}>
                 <Message.Header>{res.name}</Message.Header>
-                {transformedText && <pre>{transformedText}</pre>}
+                {text && <pre>{transformedText}</pre>}
               </Message>
             );
           })}

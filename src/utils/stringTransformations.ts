@@ -37,3 +37,20 @@ export function pascalCase(str: string): string {
   const words = sanitizeSpaces(str.trim()).split(' ');
   return words.map(word => capitalize(word.toLowerCase())).join('');
 };
+
+export function createConstant(str: string, endingSign: string = '', isObjectProp: boolean = false): string {
+  const words = sanitizeSpaces(str.trim()).split(' ');
+  const key = words.map(word => word.toUpperCase()).join('_');
+  const value = camelCase(str);
+  const joiner = isObjectProp ? ':' : ' =';
+
+  return `${key}${joiner} '${value}'${endingSign}`;
+};
+
+export function tranformsLinesToConstants(str: string, endingSign: string = '', isObjectProp: boolean = false): string {
+  return str
+    .split('\n')
+    .map(line => createConstant(line, endingSign, isObjectProp))
+    .join('\n');
+
+}

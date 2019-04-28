@@ -6,6 +6,8 @@ import {
   snakeCase,
   camelCase,
   pascalCase,
+  createConstant,
+  tranformsLinesToConstants,
 } from '../stringTransformations';
 
 describe('String transformations', () => {
@@ -104,6 +106,55 @@ describe('String transformations', () => {
     test('trims spaces in the string', () => {
       const input = '   Lorem ipsum dolor  ';
       expect(pascalCase(input)).toEqual(output);
+    });
+  });
+
+  describe.only('createConstant', () => {
+    const output = 'LOREM_IPSUM = \'loremIpsum\'';
+
+    test('transforms string into a constant key=value pair', () => {
+      const input = 'Lorem ipsum';
+      expect(createConstant(input)).toEqual(output);
+    });
+
+    test('trims spaces in the string', () => {
+      const input = '   Lorem ipsum  ';
+      expect(createConstant(input)).toEqual(output);
+    });
+
+    test('transforms string into a constant key=value pair as an object prop', () => {
+      const input = 'Lorem ipsum';
+      const output = 'LOREM_IPSUM: \'loremIpsum\'';
+
+      expect(createConstant(input, '', true)).toEqual(output);
+    });
+
+    test('transforms string into a constant key=value pair with a custom endline', () => {
+      const input = 'Lorem ipsum';
+      const output = 'LOREM_IPSUM: \'loremIpsum\';';
+
+      expect(createConstant(input, ';', true)).toEqual(output);
+    });
+  });
+
+  describe('tranformsLinesToConstants', () => {
+    const output = 'LOREM_IPSUM = \'loremIpsum\'\nDOLOR_SIT_AMET = \'dolorSitAmet\'';
+
+    test('transforms each line into constant key=value pair', () => {
+      const input = 'Lorem ipsum\nDolor sit amet';
+      expect(tranformsLinesToConstants(input)).toEqual(output);
+    });
+
+    test('trims spaces in the string', () => {
+      const input = '   Lorem ipsum  \n  Dolor sit amet    ';
+      expect(tranformsLinesToConstants(input)).toEqual(output);
+    });
+
+    test('transforms each line into constant key=value pair as object props', () => {
+      const input = 'Lorem ipsum\nDolor sit amet';
+      const output = 'LOREM_IPSUM: \'loremIpsum\',\nDOLOR_SIT_AMET: \'dolorSitAmet\',';
+
+      expect(tranformsLinesToConstants(input, ',', true)).toEqual(output);
     });
   });
 });
