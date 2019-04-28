@@ -1,5 +1,5 @@
 export function sanitizeSpaces(str: string): string {
-  return str.replace(/\s\s+/g, ' ');
+  return str.trim().replace(/\s\s+/g, ' ');
 }
 
 export function toUpperCase(str: string): string {
@@ -26,6 +26,14 @@ export function snakeCase(str: string): string {
 };
 
 export function camelCase(str: string): string {
+  const [firstWord, ...restWords] = sanitizeSpaces(str.trim()).split(' ');
+  return [
+    firstWord.toLowerCase(),
+    ...restWords.map(word => capitalize(word.toLowerCase()))
+  ].join('');
+};
+
+export function pascalCase(str: string): string {
   const words = sanitizeSpaces(str.trim()).split(' ');
   return words.map(word => capitalize(word.toLowerCase())).join('');
 };

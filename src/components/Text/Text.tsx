@@ -7,6 +7,7 @@ import {
   capitalizeAll,
   snakeCase,
   camelCase,
+  pascalCase,
 } from '../../utils/stringTransformations';
 
 const results = [
@@ -31,8 +32,12 @@ const results = [
     transformation: snakeCase,
   },
   {
-    name: 'CamelCase',
+    name: 'camelCase',
     transformation: camelCase,
+  },
+  {
+    name: 'PascalCase',
+    transformation: pascalCase,
   },
 ];
 
@@ -57,7 +62,7 @@ const InlineStyle = () => (
     .ui.message.result {
       width: 30%;
       margin: 0 3% 1rem 0;
-      min-height: 9rem;
+      min-height: 6rem;
     }
     .ui.message.result:last-child {
       margin-top: 0;
@@ -101,12 +106,7 @@ const Text: SFC = () => {
             return (
               <Message className="result" key={res.name}>
                 <Message.Header>{res.name}</Message.Header>
-                {transformedText && (
-                  <Fragment>
-                    <pre>{transformedText}</pre>
-                    <pre>{`'${transformedText}'`}</pre>
-                  </Fragment>
-                )}
+                {transformedText && <pre>{transformedText}</pre>}
               </Message>
             );
           })}
