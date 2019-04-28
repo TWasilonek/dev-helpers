@@ -1,4 +1,8 @@
-import { sanitizeSpaces, toUpperCase, toLowerCase } from "../stringTransformations";
+import {
+  sanitizeSpaces,
+  toUpperCase,
+  toLowerCase,
+} from '../stringTransformations';
 
 describe('String transformations', () => {
   describe('sanitizeSpaces', () => {
@@ -49,4 +53,3 @@ describe('String transformations', () => {
     });
   });
 });
-

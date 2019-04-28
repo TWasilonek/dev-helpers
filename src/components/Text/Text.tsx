@@ -1,11 +1,17 @@
 import React, { SFC, Fragment, useState } from 'react';
 import { Form, TextArea, Message } from 'semantic-ui-react';
-import { toUpperCase, toLowerCase, capitalize, capitalizeAll, snakeCase } from '../../utils/stringTransformations';
+import {
+  toUpperCase,
+  toLowerCase,
+  capitalize,
+  capitalizeAll,
+  snakeCase,
+} from '../../utils/stringTransformations';
 
 const results = [
   {
     name: 'Uppercase',
-    transformation: toUpperCase
+    transformation: toUpperCase,
   },
   {
     name: 'Lowercase',
@@ -26,7 +32,8 @@ const results = [
 ];
 
 const InlineStyle = () => (
-  <style>{`
+  <style>
+    {`
     .section-wrapper {
       width: 100%;
     }
@@ -82,21 +89,17 @@ const Text: SFC = () => {
             />
           </Form.Field>
         </Form>
-        
+
         <div className="results-wrapper">
           {results.map(res => {
             const transformedText = res.transformation(text);
             return (
               <Message className="result" key={res.name}>
-              <Message.Header>{res.name}</Message.Header>
+                <Message.Header>{res.name}</Message.Header>
                 {transformedText && (
                   <Fragment>
-                     <pre>
-                      {transformedText}
-                    </pre>
-                    <pre>
-                      {`'${transformedText}'`}
-                    </pre>
+                    <pre>{transformedText}</pre>
+                    <pre>{`'${transformedText}'`}</pre>
                   </Fragment>
                 )}
               </Message>
@@ -105,7 +108,7 @@ const Text: SFC = () => {
         </div>
       </div>
     </Fragment>
-  )
+  );
 };
 
 export default Text;
