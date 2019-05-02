@@ -47,20 +47,14 @@ export function createConstant(str: string, endingSign: string = '', isObjectPro
   return `${key}${joiner} '${value}'${endingSign}`;
 };
 
-export function tranformsLinesToConstants(str: string, endingSign: string = '', isObjectProp: boolean = false): string {
-  return str
-    .split('\n')
-    .map(line => createConstant(line, endingSign, isObjectProp))
-    .join('\n');
-}
-
-export function addQuotesToLines(str: string, quotes: string): string {
-  return str
-    .split('\n')
-    .map(line => addQuotes(line, quotes))
-    .join('\n');
-}
-
 export function addQuotes(str: string, quotes: string): string {
-  return `${quotes}${str}${quotes}`;
+  const trimmed = str.trim();
+  return `${quotes}${trimmed}${quotes}`;
+}
+
+export function transformLines(transformation: Function, str: string, ...args: any) {
+  return str
+    .split('\n')
+    .map(line => transformation(line, ...args))
+    .join('\n');
 }

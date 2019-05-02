@@ -7,7 +7,8 @@ import {
   camelCase,
   pascalCase,
   createConstant,
-  tranformsLinesToConstants,
+  addQuotes,
+  transformLines,
 } from '../stringTransformations';
 
 describe('String transformations', () => {
@@ -137,24 +138,43 @@ describe('String transformations', () => {
     });
   });
 
-  describe('tranformsLinesToConstants', () => {
-    const output = 'LOREM_IPSUM = \'loremIpsum\'\nDOLOR_SIT_AMET = \'dolorSitAmet\'';
+  describe('addQuotes', () => {
+    const text = 'Lorem ipsum';
+    const single = '\'';
+    const double = '"';
 
-    test('transforms each line into constant key=value pair', () => {
-      const input = 'Lorem ipsum\nDolor sit amet';
-      expect(tranformsLinesToConstants(input)).toEqual(output);
+    test('wraps text in single quotes', () => {
+      expect(addQuotes(text, single)).toEqual(`${single}${text}${single}`);
+    });
+
+    test('wraps text in double quotes', () => {
+      expect(addQuotes(text, double)).toEqual(`${double}${text}${double}`);
     });
 
     test('trims spaces in the string', () => {
-      const input = '   Lorem ipsum  \n  Dolor sit amet    ';
-      expect(tranformsLinesToConstants(input)).toEqual(output);
+      const input = '   Lorem ipsum    ';
+      const output = '"Lorem ipsum"'
+      expect(addQuotes(input, double)).toEqual(output);
+    });
+  });
+
+  describe('transformLines', () => {
+    const text = 'Lorem ipsum\nDolor sit amet'
+
+    test('applies addQuotes transformation to each line of text', () => {
+      const output = '"Lorem ipsum"\n"Dolor sit amet"';
+      expect(transformLines(addQuotes, text, '"')).toEqual(output);
+    });
+  
+    test('applies transformation with one additional argument', () => {
+      const output = 'LOREM_IPSUM = \'loremIpsum\'\nDOLOR_SIT_AMET = \'dolorSitAmet\'';
+      expect(transformLines(createConstant, text)).toEqual(output);
     });
 
-    test('transforms each line into constant key=value pair as object props', () => {
-      const input = 'Lorem ipsum\nDolor sit amet';
+    test('applies transformation with more additional arguments', () => {
       const output = 'LOREM_IPSUM: \'loremIpsum\',\nDOLOR_SIT_AMET: \'dolorSitAmet\',';
 
-      expect(tranformsLinesToConstants(input, ',', true)).toEqual(output);
+      expect(transformLines(createConstant, text, ',', true)).toEqual(output);
     });
   });
 });

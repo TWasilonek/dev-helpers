@@ -1,6 +1,7 @@
 import React, { SFC, Fragment, useState } from 'react';
 import { Form, TextArea, Message, Icon } from 'semantic-ui-react';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import classNames from 'classnames';
 
 import {
   toUpperCase,
@@ -10,59 +11,55 @@ import {
   snakeCase,
   camelCase,
   pascalCase,
-  tranformsLinesToConstants,
-  addQuotesToLines,
+  addQuotes,
+  transformLines,
+  createConstant,
 } from '../../utils/stringTransformations';
-
-const QUOTES_TYPES = {
-  NO_QUOTES: '',
-  SINGLE: '\'',
-  DOUBLE: '"',
-};
+import { QUOTES_TYPES, PLACEHOLDER_TEXT } from '../../constants';
 
 const results = [
   {
     name: 'UPPERCASE',
-    transformation: toUpperCase,
+    transformation: (str: string) => transformLines(toUpperCase, str),
     addQuotes: true,
   },
   {
     name: 'lowercase',
-    transformation: toLowerCase,
+    transformation: (str: string) => transformLines(toLowerCase, str),
     addQuotes: true,
   },
   {
     name: 'Capitalize first word',
-    transformation: capitalize,
+    transformation: (str: string) => transformLines(capitalize, str),
     addQuotes: true,
   },
   {
     name: 'Capitalize All Words',
-    transformation: capitalizeAll,
+    transformation: (str: string) => transformLines(capitalizeAll, str),
     addQuotes: true,
   },
   {
     name: 'snake_case',
-    transformation: snakeCase,
+    transformation: (str: string) => transformLines(snakeCase, str),
     addQuotes: true,
   },
   {
     name: 'camelCase',
-    transformation: camelCase,
+    transformation: (str: string) => transformLines(camelCase, str),
     addQuotes: true,
   },
   {
     name: 'PascalCase',
-    transformation: pascalCase,
+    transformation: (str: string) => transformLines(pascalCase, str),
     addQuotes: true,
   },
   {
     name: 'constant notation',
-    transformation: tranformsLinesToConstants,
+    transformation: (str: string) => transformLines(createConstant, str),
   },
   {
     name: 'constant notation in a map',
-    transformation: (str: string) => tranformsLinesToConstants(str, ',', true),
+    transformation: (str: string) => transformLines(createConstant, str, ',', true),
   },
 ];
 
@@ -97,12 +94,12 @@ const InlineStyle = () => (
     .ui.message.result:nth-of-type(3) {
       margin-right: 0;
     }
-    .ui.message.result:nth-of-type(3) {
-      margin-right: 0;
-    }
     .ui.message.result pre {
       white-space: pre-wrap;
       word-break: break-word;
+    }
+    .ui.message.result pre.placeholder {
+      color: #c5c5c5;
     }
     .ui.message.result .copy {
       position: absolute;
@@ -120,6 +117,11 @@ const Text: SFC = () => {
   const [text, setText] = useState('');
   const [quotes, setQuotes] = useState(QUOTES_TYPES.NO_QUOTES);
 
+  function transformText(text: string, transformation: Function, shouldAddQuotes: boolean | undefined): string {
+    const transformedText = transformation(text);
+    return shouldAddQuotes ? transformLines(addQuotes, transformedText, quotes) : transformedText;
+  }
+
   return (
     <Fragment>
       <InlineStyle />
@@ -129,7 +131,7 @@ const Text: SFC = () => {
         <Form className="inputs-wrapper">
           <Form.Field>
             <TextArea
-              placeholder="Enter any text"
+              placeholder={PLACEHOLDER_TEXT}
               className="textarea"
               onChange={e => setText(e.currentTarget.value)}
             />
@@ -159,16 +161,16 @@ const Text: SFC = () => {
 
         <div className="results-wrapper">
           {results.map(res => {
-            const transformedText = res.transformation(text);
-            const outputText = res.addQuotes ? addQuotesToLines(transformedText, quotes) : transformedText;
+            const baseText = text || PLACEHOLDER_TEXT;
+            const outputText = transformText(baseText, res.transformation, res.addQuotes);
 
             return (
               <Message className="result" key={res.name}>
-                <CopyToClipboard text={transformedText}>
+                <CopyToClipboard text={(text ? outputText : '')}>
                   <Icon name="copy outline" className="copy" />
                 </CopyToClipboard>
                 <Message.Header>{res.name}</Message.Header>
-                {text && <pre>{outputText}</pre>}
+                {<pre className={classNames({ 'placeholder': !text })}>{outputText}</pre>}
               </Message>
             );
           })}
