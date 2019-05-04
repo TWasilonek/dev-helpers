@@ -22,11 +22,21 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cypress": "cypress open"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "plugins": [
+      "cypress"
+    ],
+    "env": {
+      "cypress/globals": true
+    }
   },
+  "eslintIgnore": [
+    "cypress/integration/examples/*"
+  ],
   "browserslist": [
     ">0.2%",
     "not dead",
@@ -34,6 +44,9 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@types/react-copy-to-clipboard": "^4.2.6"
+    "@types/react-copy-to-clipboard": "^4.2.6",
+    "cypress": "^3.2.0",
+    "eslint-plugin-cypress": "^2.2.1",
+    "tslint-eslint-rules": "^5.4.0"
   }
 }
