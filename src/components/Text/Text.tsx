@@ -17,7 +17,7 @@ import {
 } from '../../utils/stringTransformations';
 import { QUOTES_TYPES, PLACEHOLDER_TEXT } from '../../constants';
 
-const results = [
+export const results = [
   {
     name: 'UPPERCASE',
     transformation: (str: string) => transformLines(toUpperCase, str),
@@ -127,17 +127,19 @@ const Text: SFC = () => {
       <InlineStyle />
 
       <div className="section-wrapper">
-        <h2>Text transformations</h2>
+        <h1>Text transformations</h1>
         <Form className="inputs-wrapper">
           <Form.Field>
+            <label>Text to transform</label>
             <TextArea
               placeholder={PLACEHOLDER_TEXT}
               className="textarea"
               onChange={e => setText(e.currentTarget.value)}
+              data-testid="text-input"
             />
           </Form.Field>
-          <Form.Group inline>
-            <label>Quotes type:</label>
+          <Form.Group inline data-testid="quotes-input">
+            <label>Quotes type</label>
             <Form.Radio
               label='No quotes'
               value={QUOTES_TYPES.NO_QUOTES}
