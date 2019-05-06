@@ -1,52 +1,19 @@
 {
   "name": "dev-helpers",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@types/classnames": "^2.2.7",
-    "@types/jest": "^24.0.11",
-    "@types/node": "^11.13.4",
-    "@types/react": "^16.8.13",
-    "@types/react-dom": "^16.8.4",
-    "@types/react-router-dom": "^4.3.2",
-    "classnames": "^2.2.6",
-    "react": "^16.8.6",
-    "react-copy-to-clipboard": "^5.0.1",
-    "react-dom": "^16.8.6",
-    "react-router-dom": "^5.0.0",
-    "react-scripts": "2.1.8",
-    "semantic-ui-react": "^0.86.0",
-    "typescript": "^3.4.3"
-  },
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "cypress": "cypress open"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "eslintConfig": {
-    "extends": "react-app",
-    "plugins": [
-      "cypress"
-    ],
-    "env": {
-      "cypress/globals": true
-    }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TWasilonek/dev-helpers.git"
   },
-  "eslintIgnore": [
-    "cypress/integration/examples/*"
-  ],
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
-  "devDependencies": {
-    "@types/react-copy-to-clipboard": "^4.2.6",
-    "cypress": "^3.2.0",
-    "eslint-plugin-cypress": "^2.2.1",
-    "tslint-eslint-rules": "^5.4.0"
-  }
+  "author": "Tomasz Wasilonek",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TWasilonek/dev-helpers/issues"
+  },
+  "homepage": "https://github.com/TWasilonek/dev-helpers#readme"
 }

@@ -20,7 +20,7 @@ describe('Text page', function() {
       .should('be.checked');
   });
 
-  describe('Text transformation', function() {
+  describe('Text transformations', function() {
     it('shows the correct number of transformation variants', function() {
 
     });
@@ -29,8 +29,11 @@ describe('Text page', function() {
 
     });
 
-    it('shows the correc transformation placeholder', function() {
+    it('shows the correct transformation placeholder', function() {
 
     });
+
+    // TODO: transform text and check results
+    // TODO: add quotes of different types and check results
   });
 });
