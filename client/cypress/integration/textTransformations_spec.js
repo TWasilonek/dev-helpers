@@ -1,5 +1,3 @@
-import { QUOTES_TYPES, PLACEHOLDER_TEXT } from '../../src/constants';
-
 describe('Text page', function() {
   beforeEach(function() {
     cy.visit('/');
@@ -11,7 +9,7 @@ describe('Text page', function() {
 
   it('starts with a placeholder inside the text input', function() {
     cy.get('[data-testid=text-input]')
-      .should('have.attr', 'placeholder', PLACEHOLDER_TEXT);
+      .should('have.attr', 'placeholder', 'Lorem ipsum');
   });
 
   it('starts with no quotes option', function() {
@@ -20,18 +18,25 @@ describe('Text page', function() {
       .should('be.checked');
   });
 
-  describe('Text transformations', function() {
-    it('shows the correct number of transformation variants', function() {
+  it('shows the correct transformed placeholder', function() {
+    cy.get('[data-testid=text-input]');
+    // TODO: check each placeholder?
+  });
 
+  describe('Text transformations', function() {
+    beforeEach(function() {
+      cy.get('[data-testid=text-input]')
+        .type('lorem ipsum');
     });
 
     it('shows the correct transformation names', function() {
-
+      // TODO:
     });
 
-    it('shows the correct transformation placeholder', function() {
-
+    it('transforms text correctly', function() {
+      // TODO:
     });
+
 
     // TODO: transform text and check results
     // TODO: add quotes of different types and check results

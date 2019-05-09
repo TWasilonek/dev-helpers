@@ -17,7 +17,7 @@ import {
 } from '../../utils/stringTransformations';
 import { QUOTES_TYPES, PLACEHOLDER_TEXT } from '../../constants';
 
-export const results = [
+const results = [
   {
     name: 'UPPERCASE',
     transformation: (str: string) => transformLines(toUpperCase, str),
