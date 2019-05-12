@@ -17,28 +17,4 @@ describe('Text page', function() {
       .siblings('input[type=radio]')
       .should('be.checked');
   });
-
-  it('shows the correct transformed placeholder', function() {
-    cy.get('[data-testid=text-input]');
-    // TODO: check each placeholder?
-  });
-
-  describe('Text transformations', function() {
-    beforeEach(function() {
-      cy.get('[data-testid=text-input]')
-        .type('lorem ipsum');
-    });
-
-    it('shows the correct transformation names', function() {
-      // TODO:
-    });
-
-    it('transforms text correctly', function() {
-      // TODO:
-    });
-
-
-    // TODO: transform text and check results
-    // TODO: add quotes of different types and check results
-  });
 });

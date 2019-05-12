@@ -17,7 +17,17 @@ import {
 } from '../../utils/stringTransformations';
 import { QUOTES_TYPES, PLACEHOLDER_TEXT } from '../../constants';
 
-const results = [
+export interface ITransformation {
+  name: string,
+  transformation: Function,
+  addQuotes: boolean
+}
+
+interface Props {
+  transformations: ITransformation[],
+ }
+
+const TRANSFORMATIONS = [
   {
     name: 'UPPERCASE',
     transformation: (str: string) => transformLines(toUpperCase, str),
@@ -56,10 +66,12 @@ const results = [
   {
     name: 'constant notation',
     transformation: (str: string) => transformLines(createConstant, str),
+    addQuotes: false,
   },
   {
     name: 'constant notation in a map',
     transformation: (str: string) => transformLines(createConstant, str, ',', true),
+    addQuotes: false,
   },
 ];
 
@@ -113,7 +125,7 @@ const InlineStyle = () => (
   </style>
 );
 
-const Text: SFC = () => {
+const Text: SFC<Props> = ({ transformations = TRANSFORMATIONS }) => {
   const [text, setText] = useState('');
   const [quotes, setQuotes] = useState(QUOTES_TYPES.NO_QUOTES);
 
@@ -130,12 +142,13 @@ const Text: SFC = () => {
         <h1>Text transformations</h1>
         <Form className="inputs-wrapper">
           <Form.Field>
-            <label>Text to transform</label>
+            <label htmlFor="text-input">Text to transform</label>
             <TextArea
               placeholder={PLACEHOLDER_TEXT}
               className="textarea"
               onChange={e => setText(e.currentTarget.value)}
               data-testid="text-input"
+              id="text-input"
             />
           </Form.Field>
           <Form.Group inline data-testid="quotes-input">
@@ -162,17 +175,17 @@ const Text: SFC = () => {
         </Form>
 
         <div className="results-wrapper">
-          {results.map(res => {
+          {transformations.map((res: ITransformation) => {
             const baseText = text || PLACEHOLDER_TEXT;
             const outputText = transformText(baseText, res.transformation, res.addQuotes);
 
             return (
-              <Message className="result" key={res.name}>
+              <Message className="result" key={res.name} data-testid="result">
                 <CopyToClipboard text={(text ? outputText : '')}>
                   <Icon name="copy outline" className="copy" />
                 </CopyToClipboard>
-                <Message.Header>{res.name}</Message.Header>
-                {<pre className={classNames({ 'placeholder': !text })}>{outputText}</pre>}
+                <Message.Header data-testid="result-header">{res.name}</Message.Header>
+                {<pre data-testid="result-output" className={classNames({ 'placeholder': !text })}>{outputText}</pre>}
               </Message>
             );
           })}
