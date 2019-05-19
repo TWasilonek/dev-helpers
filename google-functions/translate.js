@@ -1,25 +1,48 @@
-async function quickstart(
-  projectId = 'dev-helpers' // Your GCP Project Id
-) {
-  // Imports the Google Cloud client library
-  const {Translate} = require('@google-cloud/translate');
+/**
+ * Responds to any HTTP request.
+ *
+ * @param {!express:Request} req HTTP request context.
+ * @param {!express:Response} res HTTP response context.
+ */
+const Translate = require('@google-cloud/translate');
+const translate = new Translate.Translate();
 
-  // Instantiates a client
-  const translate = new Translate({projectId});
+async function makeTranslations (inputs, target) {
+  /*
+    Example text:
+    {
+      'text.name' = 'some text',
+      'text.name' = 'some text',
+    }
 
-  // The text to translate
-  const text = 'Hello, world!';
+    or:
 
-  // The target language
-  const target = 'ru';
+    [
+      'some text',
+      'some text'
+    ]
+  */
+    let results;
 
-  // Translates some text into Russian
-  const [translation] = await translate.translate(text, target);
-  console.log(`Text: ${text}`);
-  console.log(`Translation: ${translation}`);
+    if (Array.isArray(inputs, target)) {
+      const [translation] = await translate.translate(inputs, target);
+      results = translation;
+    } else {
+      const values = Object.values(inputs);
+      const keys = Object.keys(inputs);
+      
+      const [translation] = await translate.translate(values, target);
+      results = keys.reduce((acc, key, i) => ({ ...acc, [key]: translation[i] }), {});
+    }
+
+    return results;
 }
 
-// const args = process.argv.slice(2);
-// quickstart(...args).catch(console.error);
+exports.translateText = async (req, res) => {
+  const { langs, strings } = req.body;
 
-module.exports = quickstart;
+  const translations = await Promise.all(langs.map(lang => makeTranslations(strings, lang)));
+  const response = langs.reduce((acc, lang, i) => ({ ...acc, [lang]: translations[i] }), {});
+
+  res.status(200).send(response);
+};
