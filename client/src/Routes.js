@@ -4,6 +4,7 @@ import { Container } from 'semantic-ui-react';
 
 import TopNav from './components/TopNav';
 import Text from './components/Text';
+import Translations from './components/Translations';
 
 const InlineStyle = () => (
   <style>{`
@@ -24,6 +25,7 @@ const Routes = () => (
       <TopNav />
       <Switch>
         <Route exact path="/" component={Text} />
+        <Route exact path="/translations" component={Translations} />
       </Switch>
     </Container>      
   </div>
