@@ -23,10 +23,16 @@ const setup = () => {
 
   const input = utils.getByLabelText('Text to transform');
   const results = utils.getAllByTestId('result');
+  const noQuotesSwitch = utils.getByLabelText('No quotes');
+  const singleQuotesSwitch = utils.getByLabelText('Single quotes');
+  const doubleQuotesSwitch = utils.getByLabelText('Double quotes');
 
   return {
    input,
    results,
+   noQuotesSwitch,
+   singleQuotesSwitch,
+   doubleQuotesSwitch,
     ...utils,
   };
 };
@@ -34,6 +40,8 @@ const setup = () => {
 afterEach(cleanup);
 
 describe('Text', () => {
+  const INPUT = 'test text'
+
   test('shows correct number of result fields', () => {
     const { results } = setup();
     expect(results).toHaveLength(FAKE_TRANSFORMATIONS.length);
@@ -44,33 +52,40 @@ describe('Text', () => {
 
     results.forEach((res, i) => {
       const header = res.querySelector('[data-testid=result-header]');
-
-      expect(header).not.toBeNull();
       expect(header.textContent).toEqual(FAKE_TRANSFORMATIONS[i].name);
     });
   });
 
   test('transforms text correctly', function() {
-    const INPUT = 'test text'
     const { results, input } = setup();
 
     fireEvent.change(input, { target: { value: INPUT } });
 
     results.forEach((res, i) => {
       const output = res.querySelector('[data-testid=result-output]');
-
-      expect(output).not.toBeNull();
       expect(output.textContent).toEqual(FAKE_TRANSFORMATIONS[i].transformation(INPUT));
     });
   });
 
   describe('changing quotes', () => {
+    function checkQuotes(input: any, results: any[], switchBtn: any, regex: RegExp) {
+      fireEvent.change(input, { target: { value: INPUT } });
+      fireEvent.click(switchBtn);
+    
+      results.forEach(res => {
+        const output = res.querySelector('[data-testid=result-output]');
+        expect(output.textContent).toEqual(expect.stringMatching(regex));
+      });
+    };
+
     test('selecting single quotes works', () => {
-      // TODO:
+      const { input, results, singleQuotesSwitch } = setup();
+      checkQuotes(input, results, singleQuotesSwitch, /(').*\1/);
     });
 
     test('selecting double quotes works', () => {
-      // TODO:
+      const { input, results, doubleQuotesSwitch } = setup();
+      checkQuotes(input, results, doubleQuotesSwitch, /(").*\1/);
     });
   });
 });

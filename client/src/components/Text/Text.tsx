@@ -155,18 +155,24 @@ const Text: SFC<Props> = ({ transformations = TRANSFORMATIONS }) => {
             <label>Quotes type</label>
             <Form.Radio
               label='No quotes'
+              id="no-quotes"
+              name="quotes"
               value={QUOTES_TYPES.NO_QUOTES}
               checked={quotes === QUOTES_TYPES.NO_QUOTES}
               onChange={() => setQuotes(QUOTES_TYPES.NO_QUOTES)}
             />
             <Form.Radio
               label='Single quotes'
+              id="single-quotes"
+              name="quotes"
               value={QUOTES_TYPES.SINGLE}
               checked={quotes === QUOTES_TYPES.SINGLE}
               onChange={() => setQuotes(QUOTES_TYPES.SINGLE)}
             />
             <Form.Radio
               label='Double quotes'
+              id="double-quotes"
+              name="quotes"
               value={QUOTES_TYPES.DOUBLE}
               checked={quotes === QUOTES_TYPES.DOUBLE}
               onChange={() => setQuotes(QUOTES_TYPES.DOUBLE)}
