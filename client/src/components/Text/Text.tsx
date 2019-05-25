@@ -16,6 +16,7 @@ import {
   createConstant,
 } from '../../utils/stringTransformations';
 import { QUOTES_TYPES, PLACEHOLDER_TEXT } from '../../constants';
+import Result from '../Result/Result';
 
 export interface ITransformation {
   name: string,
@@ -93,33 +94,18 @@ const InlineStyle = () => (
       justify-content: flex-start;
       padding-top: 30px;
     }
-    .ui.message.result {
+    .ui.message.text-result {
       width: 30%;
       position: relative;
       margin: 0 3% 1rem 0;
       min-height: 6rem;
     }
-    .ui.message.result:last-child {
+    .ui.message.text-result:last-child {
       margin-top: 0;
       margin-bottom: 1rem;
     }
-    .ui.message.result:nth-of-type(3) {
+    .ui.message.text-result:nth-of-type(3) {
       margin-right: 0;
-    }
-    .ui.message.result pre {
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-    .ui.message.result pre.placeholder {
-      color: #c5c5c5;
-    }
-    .ui.message.result .copy {
-      position: absolute;
-      right: .7em;
-      top: .7em;
-      margin: 0;
-      cursor: pointer;
-      font-size: 1.2em;
     }
   `}
   </style>
@@ -186,14 +172,23 @@ const Text: SFC<Props> = ({ transformations = TRANSFORMATIONS }) => {
             const outputText = transformText(baseText, res.transformation, res.addQuotes);
 
             return (
-              <Message className="result" key={res.name} data-testid="result">
-                <CopyToClipboard text={(text ? outputText : '')}>
-                  <Icon name="copy outline" className="copy" />
-                </CopyToClipboard>
-                <Message.Header data-testid="result-header">{res.name}</Message.Header>
-                {<pre data-testid="result-output" className={classNames({ 'placeholder': !text })}>{outputText}</pre>}
-              </Message>
-            );
+              <Result
+                className="text-result"
+                clipboardText={(text ? outputText : '')}
+                text={outputText}
+                header={res.name}
+                key={res.name}
+              />
+            )
+            // return (
+            //   <Message className="result" key={res.name} data-testid="result">
+            //     <CopyToClipboard text={(text ? outputText : '')}>
+            //       <Icon name="copy outline" className="copy" />
+            //     </CopyToClipboard>
+            //     <Message.Header data-testid="result-header">{res.name}</Message.Header>
+            //     {<pre data-testid="result-output" className={classNames({ 'placeholder': !text })}>{outputText}</pre>}
+            //   </Message>
+            // );
           })}
         </div>
       </div>

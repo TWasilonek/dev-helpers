@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, cleanup, render } from 'react-testing-library';
+import { fireEvent, render } from 'react-testing-library';
 
 import Text, { ITransformation } from './Text';
 
@@ -36,8 +36,6 @@ const setup = () => {
     ...utils,
   };
 };
-
-afterEach(cleanup);
 
 describe('Text', () => {
   const INPUT = 'test text'
