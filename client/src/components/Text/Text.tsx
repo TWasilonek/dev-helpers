@@ -179,16 +179,7 @@ const Text: SFC<Props> = ({ transformations = TRANSFORMATIONS }) => {
                 header={res.name}
                 key={res.name}
               />
-            )
-            // return (
-            //   <Message className="result" key={res.name} data-testid="result">
-            //     <CopyToClipboard text={(text ? outputText : '')}>
-            //       <Icon name="copy outline" className="copy" />
-            //     </CopyToClipboard>
-            //     <Message.Header data-testid="result-header">{res.name}</Message.Header>
-            //     {<pre data-testid="result-output" className={classNames({ 'placeholder': !text })}>{outputText}</pre>}
-            //   </Message>
-            // );
+            );
           })}
         </div>
       </div>

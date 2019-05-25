@@ -2,9 +2,9 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
 
-import TopNav from './components/TopNav';
-import Text from './components/Text';
-import Translations from './components/Translations';
+import TopNav from './components/TopNav/TopNav';
+import Text from './components/Text/Text';
+import Translations from './components/Translations/Translations';
 
 const InlineStyle = () => (
   <style>{`

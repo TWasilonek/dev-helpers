@@ -1,5 +1,5 @@
 import React, { SFC, Fragment } from 'react';
-import { Form, TextArea, Message, Icon } from 'semantic-ui-react';
+import { Message, Icon } from 'semantic-ui-react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import classNames from 'classnames';
 
