@@ -39,16 +39,6 @@ const Translations: SFC = () => {
       <div className="section-wrapper">
         <h1>Translations</h1>
         <Form className="inputs-wrapper">
-          {/* <Form.Field
-            constrol={Select}
-            options={OPTIONS}
-            label="Language"
-            selected="en"
-            placeholder="Select Language"
-            id="input-language"
-            search
-            searchInput={{ id: 'input-language' }}
-          /> */}
            <Form.Field
             control={Select}
             options={OPTIONS}
