@@ -1,7 +1,5 @@
 import React, { SFC, Fragment, useState } from 'react';
-import { Form, TextArea, Message, Icon } from 'semantic-ui-react';
-import CopyToClipboard from 'react-copy-to-clipboard';
-import classNames from 'classnames';
+import { Form, TextArea } from 'semantic-ui-react';
 
 import {
   toUpperCase,
