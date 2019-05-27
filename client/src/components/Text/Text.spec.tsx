@@ -54,7 +54,7 @@ describe('Text', () => {
     });
   });
 
-  test('transforms text correctly', function() {
+  test('shows transformed text', function() {
     const { results, input } = setup();
 
     fireEvent.change(input, { target: { value: INPUT } });

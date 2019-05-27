@@ -1,5 +1,6 @@
 import React, { SFC, Fragment, useState } from 'react';
 import { Form, TextArea, Select } from 'semantic-ui-react';
+import Result from '../Result/Result';
 
 const OPTIONS = [
   {
@@ -32,6 +33,8 @@ const InlineStyle = () => (
 );
 
 const Translations: SFC = () => {
+  const [text, setText] = useState('Bienvenido');
+
   return (
     <Fragment>
       <InlineStyle />
@@ -48,16 +51,22 @@ const Translations: SFC = () => {
             search
             searchInput={{ id: "input-language" }}
           />
-          <Form.Field>
-            <label htmlFor="text-input">Text to translate</label>
-            <TextArea
-              placeholder="Welcome"
-              className="textarea"
-              data-testid="text-input"
-              id="text-input"
-            />
-          </Form.Field>
+          <Form.Field
+            control={TextArea}
+            label="Text to translate"
+            placeholder="Welcome"
+            className="textarea"
+            data-testid="text-input"
+            id="text-input"
+          />
         </Form>
+        
+        <Result
+          className="text-result"
+          clipboardText={text}
+          text={text}
+          header="Translation"
+        />
       </div>
     </Fragment>
   )
