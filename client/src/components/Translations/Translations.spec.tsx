@@ -34,6 +34,11 @@ describe('Transaltions', () => {
   });
 
   // TODO: test if submit calls the correct function with correct input
+  test('submits the correct data', () => {
+    // TODO: form is filled
+    // TODO: Submit is clicked
+    // api.translate is called with the correct data
+  });
 
   // TODO: create service for AJAX (with retryability etc.) that will process the request for language
 });
