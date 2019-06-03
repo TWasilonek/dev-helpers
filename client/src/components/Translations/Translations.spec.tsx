@@ -1,20 +1,25 @@
 import React from 'react';
-import { fireEvent, render } from 'react-testing-library';
+import { fireEvent, render, waitForElement } from 'react-testing-library';
 import Translations from './Translations';
+import translationApiMock from '../../__mocks__/translationApiMock';
 
 const setup = () => {
   const utils = render(
     <Translations />
   );
 
+  const form = utils.getByTestId('translation-form');
   const input = utils.getByLabelText('Text to translate');
   const inputLangSelect = utils.getAllByLabelText('Language');
   const result = utils.getByTestId('result');
+  // const submit = utils.getByTestId('submit');
 
   return {
-   input,
-   inputLangSelect,
-   result,
+    form,
+    input,
+    inputLangSelect,
+    result,
+  //  submit,
     ...utils,
   };
 };
@@ -34,10 +39,27 @@ describe('Transaltions', () => {
   });
 
   // TODO: test if submit calls the correct function with correct input
-  test('submits the correct data', () => {
+  test.only('submits the correct data', async () => {
+    translationApiMock.translate.mockRejectedValueOnce({ data: { named: '', unnamed: 'Hola' }});
     // TODO: form is filled
-    // TODO: Submit is clicked
-    // api.translate is called with the correct data
+    const { input, form, result } = setup();
+    const text = 'Hello';
+
+    fireEvent.change(input, { target: {  value: text } });
+    fireEvent.submit(form);
+
+    expect(translationApiMock.translate).toHaveBeenCalledTimes(1);
+    expect(translationApiMock.translate).toHaveBeenCalledWith(text);
+
+    // we expect the "loading" span to be displayed
+    // expect(getByTestId("loading")).toHaveTextContent("Loading data...");
+
+    // wait for the result to be rendered again (loading is finished)
+    // const translationCompleted = await waitForElement(() => result);
+
+    // Now with the resolvedSpan in hand, we can ensure it has the correct content
+    // expect(result).toHaveTextContent('Hola');
+
   });
 
   // TODO: create service for AJAX (with retryability etc.) that will process the request for language

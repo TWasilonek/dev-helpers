@@ -1,4 +1,4 @@
-import React, { SFC, Fragment, useState } from 'react';
+import React, { SFC, Fragment, useState, useEffect } from 'react';
 import { Form, TextArea, Select } from 'semantic-ui-react';
 import Result from '../Result/Result';
 
@@ -35,13 +35,19 @@ const InlineStyle = () => (
 const Translations: SFC = () => {
   const [text, setText] = useState('Bienvenido');
 
+  useEffect(
+    () => {
+      // TODO:
+    }
+  );
+
   return (
     <Fragment>
       <InlineStyle />
 
       <div className="section-wrapper">
         <h1>Translations</h1>
-        <Form className="inputs-wrapper">
+        <Form className="inputs-wrapper" data-testid="translation-form">
            <Form.Field
             control={Select}
             options={OPTIONS}
@@ -59,6 +65,7 @@ const Translations: SFC = () => {
             data-testid="text-input"
             id="text-input"
           />
+          <Form.Button type='submit' data-testid="submit">Submit</Form.Button>
         </Form>
         
         <Result
