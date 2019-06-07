@@ -1,6 +1,7 @@
 import React, { SFC, Fragment, useState, useEffect } from 'react';
 import { Form, TextArea, Select } from 'semantic-ui-react';
 import Result from '../Result/Result';
+import { translate, ITranslationData } from '../../api/translationApi';
 
 const OPTIONS = [
   {
@@ -35,11 +36,26 @@ const InlineStyle = () => (
 const Translations: SFC = () => {
   const [text, setText] = useState('Bienvenido');
 
-  useEffect(
-    () => {
-      // TODO:
+  const [data, setData] = useState({});
+  useEffect(() => {
+    async function postTranslations() {
+      const result = await translate(data);
+      console.log('result');
     }
-  );
+    postTranslations();
+  });
+
+  const onSubmit = () => {
+    const data: ITranslationData = {
+      strings: {
+        named: {},
+        unnamed: [],
+      },
+      langs: [],
+    }
+
+    setData(data);
+  }
 
   return (
     <Fragment>
@@ -47,7 +63,7 @@ const Translations: SFC = () => {
 
       <div className="section-wrapper">
         <h1>Translations</h1>
-        <Form className="inputs-wrapper" data-testid="translation-form">
+        <Form className="inputs-wrapper" data-testid="translation-form" onSubmit={onSubmit}>
            <Form.Field
             control={Select}
             options={OPTIONS}
@@ -65,7 +81,9 @@ const Translations: SFC = () => {
             data-testid="text-input"
             id="text-input"
           />
-          <Form.Button type='submit' data-testid="submit">Submit</Form.Button>
+          <Form.Button type='submit' data-testid="submit">
+            Submit
+          </Form.Button>
         </Form>
         
         <Result

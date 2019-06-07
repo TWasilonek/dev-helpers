@@ -2,12 +2,12 @@ import axios from 'axios';
 
 const BASE_URI = 'https://us-central1-dev-helpers.cloudfunctions.net';
 
-export type TranslationData = {
+export type ITranslationData = {
   strings: {
-    named: { [key:string]: string },
-    unnamed: string[],
+    named?: { [key:string]: string },
+    unnamed?: string[],
   },
   langs: string[],
-};
+} | {};
 
-export const translate = (data: TranslationData) => axios.post(`${BASE_URI}/translateText`, data);
+export const translate = (data: ITranslationData) => axios.post(`${BASE_URI}/translateText`, data);
