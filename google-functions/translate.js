@@ -42,8 +42,24 @@ async function makeTranslations (strings, target) {
 exports.translateText = async (req, res) => {
   const { langs, strings } = req.body;
 
+  if (!langs) {
+    res.status(500).error('Missing "langs"');
+  }
+
+  // TODO: handle missing body params - "strings" - no error, just send empty text
+
   const translations = await Promise.all(langs.map(lang => makeTranslations(strings, lang)));
   const response = langs.reduce((acc, lang, i) => ({ ...acc, [lang]: translations[i] }), {});
 
-  res.status(200).send(response);
+  res.set('Access-Control-Allow-Origin', "*");
+
+  if (req.method === 'OPTIONS') {
+    // Send response to OPTIONS requests
+    res.set('Access-Control-Allow-Methods', 'POST');
+    res.set('Access-Control-Allow-Headers', 'Content-Type');
+    res.set('Access-Control-Max-Age', '3600');
+    res.status(204).send('');
+  } else {
+    res.status(200).send(response);
+  }
 };
