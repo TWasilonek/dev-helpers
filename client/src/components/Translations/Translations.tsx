@@ -33,10 +33,19 @@ const InlineStyle = () => (
   </style>
 );
 
+
+const defaultData: ITranslationData = {
+  strings: {
+    named: {},
+    unnamed: [],
+  },
+  langs: ['en'],
+}
+
 const Translations: SFC = () => {
   const [text, setText] = useState('Bienvenido');
 
-  const [data, setData] = useState({});
+  const [data, setData] = useState(defaultData);
   useEffect(() => {
     async function postTranslations() {
       const result = await translate(data);
@@ -51,7 +60,7 @@ const Translations: SFC = () => {
         named: {},
         unnamed: [],
       },
-      langs: [],
+      langs: ['en'],
     }
 
     setData(data);

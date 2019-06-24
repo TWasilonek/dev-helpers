@@ -7,7 +7,7 @@
 const Translate = require('@google-cloud/translate');
 const translate = new Translate.Translate();
 
-async function makeTranslations (strings, target) {
+async function makeTranslations (strings, targetLang) {
   /*
     named:
     {
@@ -26,40 +26,50 @@ async function makeTranslations (strings, target) {
   };
   
   if (strings.unnamed.length) {
-    const [translation] = await translate.translate(strings.unnamed, target);
+    const [translation] = await translate.translate(strings.unnamed, targetLang);
     results.unnamed = translation;
   }
 
   const values = Object.values(strings.named);
   const keys = Object.keys(strings.named);
-  
-  const [translation] = await translate.translate(values, target);
-  results.named = keys.reduce((acc, key, i) => ({ ...acc, [key]: translation[i] }), {});
+  if (values.length) {
+    const [translation] = await translate.translate(values, targetLang);
+    results.named = keys.reduce((acc, key, i) => ({ ...acc, [key]: translation[i] }), {});
+  }
     
   return results;
 }
 
 exports.translateText = async (req, res) => {
-  const { langs, strings } = req.body;
-
-  if (!langs) {
-    res.status(500).error('Missing "langs"');
-  }
-
-  // TODO: handle missing body params - "strings" - no error, just send empty text
-
-  const translations = await Promise.all(langs.map(lang => makeTranslations(strings, lang)));
-  const response = langs.reduce((acc, lang, i) => ({ ...acc, [lang]: translations[i] }), {});
-
-  res.set('Access-Control-Allow-Origin', "*");
+  res.set('Access-Control-Allow-Origin', '*');
 
   if (req.method === 'OPTIONS') {
     // Send response to OPTIONS requests
     res.set('Access-Control-Allow-Methods', 'POST');
-    res.set('Access-Control-Allow-Headers', 'Content-Type');
     res.set('Access-Control-Max-Age', '3600');
     res.status(204).send('');
   } else {
-    res.status(200).send(response);
+    const { langs, strings } = req.body;
+    console.log("langs", langs);
+    console.log("strings", strings);
+
+    if (!langs || !langs.length) {
+      res.status(500).send('Missing "langs"');
+    }
+
+    if (!strings) {
+      res.status(500).send('Missing "strings"');
+    }
+
+    try {
+      const translations = await Promise.all(langs.map(lang => makeTranslations(strings, lang)));
+      console.log('translations', translations);
+      const response = langs.reduce((acc, lang, i) => ({ ...acc, [lang]: translations[i] }), {});
+      console.log('response', response);
+      res.status(200).send(response);
+    } catch(e){
+      console.error(e);
+      res.status(500).send('Something went wrong');
+    }
   }
 };
