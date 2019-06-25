@@ -24,6 +24,11 @@ const setup = () => {
   };
 };
 
+const checkTranslationOutput = (elem: Element, expectedText: string) => {
+  const output = elem.querySelector('[data-testid=result-output]');
+  expect(output).toHaveTextContent(expectedText);
+}
+
 describe('Transaltions', () => {
   test('shows the input with placeholder text', () => {
     const { input } = setup();
@@ -32,10 +37,9 @@ describe('Transaltions', () => {
 
   test('shows the result in default output language', () => {
     const { result } = setup();
-    expect(result).toBeInTheDocument();
 
-    const output = result.querySelector('[data-testid=result-output]');
-    expect(output).toHaveTextContent('Bienvenido');
+    expect(result).toBeInTheDocument();
+    checkTranslationOutput(result, 'Bienvenido');
   });
 
   // TODO: test if submit calls the correct function with correct input
@@ -48,17 +52,18 @@ describe('Transaltions', () => {
     fireEvent.change(input, { target: {  value: text } });
     fireEvent.submit(form);
 
-    expect(translationApiMock.translate).toHaveBeenCalledTimes(1);
-    expect(translationApiMock.translate).toHaveBeenCalledWith(text);
-
     // we expect the "loading" span to be displayed
     // expect(getByTestId("loading")).toHaveTextContent("Loading data...");
 
     // wait for the result to be rendered again (loading is finished)
-    // const translationCompleted = await waitForElement(() => result);
+    const resolvedElem = await waitForElement(() => result);
 
     // Now with the resolvedSpan in hand, we can ensure it has the correct content
-    // expect(result).toHaveTextContent('Hola');
+    // expect(resolvedText).toHaveTextContent('Hola');
+    checkTranslationOutput(resolvedElem, 'Hola');
+
+    // expect(translationApiMock.translate).toHaveBeenCalledTimes(1);
+    // expect(translationApiMock.translate).toHaveBeenCalledWith(text);
 
   });
 
