@@ -43,18 +43,21 @@ const defaultData: ITranslationData = {
 }
 
 const Translations: SFC = () => {
-  const [text, setText] = useState('Bienvenido');
+  const [sourceText, setSourceText] = useState();
+  const [translation, setTranslation] = useState('Bienvenido');
 
   const [data, setData] = useState(defaultData);
   useEffect(() => {
+    // TODO: this is executed on every keystroke to text input. Fix it!
     async function postTranslations() {
       const result = await translate(data);
-      console.log('result');
+      console.log('result', result);
     }
     postTranslations();
   });
 
-  const onSubmit = () => {
+  const onSubmit = (formData: any) => {
+    console.log('submit');
     const data: ITranslationData = {
       strings: {
         named: {},
@@ -64,6 +67,10 @@ const Translations: SFC = () => {
     }
 
     setData(data);
+  }
+
+  const handleChange = (e: Event, { name, value }: { name: string, value: string }) => {
+    setSourceText(value);
   }
 
   return (
@@ -87,8 +94,9 @@ const Translations: SFC = () => {
             label="Text to translate"
             placeholder="Welcome"
             className="textarea"
-            data-testid="text-input"
-            id="text-input"
+            data-testid="source-text"
+            id="source-text"
+            onChange={handleChange}
           />
           <Form.Button type='submit' data-testid="submit">
             Submit
@@ -97,8 +105,8 @@ const Translations: SFC = () => {
         
         <Result
           className="text-result"
-          clipboardText={text}
-          text={text}
+          clipboardText={translation}
+          text={translation}
           header="Translation"
         />
       </div>
