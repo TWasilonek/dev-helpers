@@ -48,15 +48,14 @@ const Translations: SFC = () => {
 
   const [data, setData] = useState(defaultData);
   useEffect(() => {
-    // TODO: this is executed on every keystroke to text input. Fix it!
     async function postTranslations() {
       const result = await translate(data);
       console.log('result', result);
     }
     postTranslations();
-  });
+  }, [data]); // this effect will run only when 'data' changes
 
-  const onSubmit = (formData: any) => {
+  const onSubmit = () => {
     console.log('submit');
     const data: ITranslationData = {
       strings: {
