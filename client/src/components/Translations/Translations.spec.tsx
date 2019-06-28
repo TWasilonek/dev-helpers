@@ -11,14 +11,16 @@ const setup = () => {
   const form = utils.getByTestId('translation-form');
   const input = utils.getByLabelText('Text to translate');
   const inputLangSelect = utils.getAllByLabelText('Language');
-  const result = utils.getByTestId('result');
+  // const result = utils.getByTestId('result-output');
+  // const placeholder = utils.getByTestId('result-placeholder');
   // const submit = utils.getByTestId('submit');
 
   return {
     form,
     input,
     inputLangSelect,
-    result,
+    // result,
+    // placeholder,
   //  submit,
     ...utils,
   };
@@ -36,17 +38,18 @@ describe('Transaltions', () => {
   });
 
   test('shows the result in default output language', () => {
-    const { result } = setup();
+    const { getByTestId } = setup();
+    const placeholder = getByTestId('result-placeholder');
 
-    expect(result).toBeInTheDocument();
-    checkTranslationOutput(result, 'Bienvenido');
+    expect(placeholder).toBeInTheDocument();
+    checkTranslationOutput(placeholder, 'Bienvenido');
   });
 
   // TODO: test if submit calls the correct function with correct input
   test.only('submits the correct data', async () => {
     translationApiMock.translate.mockRejectedValueOnce({ data: { named: '', unnamed: 'Hola' }});
     // TODO: form is filled
-    const { input, form, result } = setup();
+    const { input, form, getByTestId } = setup();
     const text = 'Hello';
 
     fireEvent.change(input, { target: {  value: text } });
@@ -56,11 +59,11 @@ describe('Transaltions', () => {
     // expect(getByTestId("loading")).toHaveTextContent("Loading data...");
 
     // wait for the result to be rendered again (loading is finished)
-    const resolvedElem = await waitForElement(() => result);
+    const result = await waitForElement(() => getByTestId('result-output'));
 
     // Now with the resolvedSpan in hand, we can ensure it has the correct content
     // expect(resolvedText).toHaveTextContent('Hola');
-    checkTranslationOutput(resolvedElem, 'Hola');
+    checkTranslationOutput(result, 'Hola');
 
     // expect(translationApiMock.translate).toHaveBeenCalledTimes(1);
     // expect(translationApiMock.translate).toHaveBeenCalledWith(text);

@@ -1,4 +1,4 @@
-import React, { SFC, Fragment, useState, useEffect } from 'react';
+import React, { SFC, Fragment, useState, useEffect, useRef } from 'react';
 import { Form, TextArea, Select } from 'semantic-ui-react';
 import Result from '../Result/Result';
 import { translate, ITranslationData } from '../../api/translationApi';
@@ -39,30 +39,40 @@ const defaultData: ITranslationData = {
     named: {},
     unnamed: [],
   },
-  langs: ['en'],
+  langs: ['es'],
 }
 
 const Translations: SFC = () => {
-  const [sourceText, setSourceText] = useState();
-  const [translation, setTranslation] = useState('Bienvenido');
+  const placeholder = 'Bienvenido';
+  const [sourceText, setSourceText] = useState('');
+  const [translation, setTranslation] = useState('');
 
   const [data, setData] = useState(defaultData);
+  const isFirstRun = useRef(true);
   useEffect(() => {
     async function postTranslations() {
       const result = await translate(data);
       console.log('result', result);
+      const translatedText = result.data['es'].unnamed;
+      setTranslation(translatedText);
     }
+
+    if (isFirstRun.current) {
+      isFirstRun.current = false;
+      return;
+    }
+    
     postTranslations();
   }, [data]); // this effect will run only when 'data' changes
 
   const onSubmit = () => {
-    console.log('submit');
+    console.log('submit', sourceText);
     const data: ITranslationData = {
       strings: {
         named: {},
-        unnamed: [],
+        unnamed: [sourceText],
       },
-      langs: ['en'],
+      langs: ['es'],
     }
 
     setData(data);
@@ -106,6 +116,7 @@ const Translations: SFC = () => {
           className="text-result"
           clipboardText={translation}
           text={translation}
+          placeholder={placeholder}
           header="Translation"
         />
       </div>
