@@ -8,6 +8,7 @@ interface Props {
   header?: string,
   text?: string,
   clipboardText?: string,
+  placeholder?: string,
   onCopy?: (a: string, b: boolean) => void,
  };
 
@@ -44,6 +45,7 @@ const Result: SFC<Props> = ({
   header = '',
   text = '',
   clipboardText = '',
+  placeholder = '',
   onCopy,
   ...otherProps
 }) => {
@@ -64,7 +66,11 @@ const Result: SFC<Props> = ({
           <Icon name="copy outline" className="copy" />
         </CopyToClipboard>
         <Message.Header data-testid="result-header">{header}</Message.Header>
-        {<pre data-testid="result-output" className={classNames({ 'placeholder': !text })}>{text}</pre>}
+        {text ? (
+          <pre data-testid="result-output">{text}</pre>
+        ) : (
+          <pre data-testid="result-placeholder" className="placeholder">{placeholder}</pre>
+        )}
       </Message>
     </Fragment>
   );

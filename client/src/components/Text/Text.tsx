@@ -173,7 +173,8 @@ const Text: SFC<Props> = ({ transformations = TRANSFORMATIONS }) => {
               <Result
                 className="text-result"
                 clipboardText={(text ? outputText : '')}
-                text={outputText}
+                text={text ? outputText : ''}
+                placeholder={text ? '' : outputText}
                 header={res.name}
                 key={res.name}
               />
