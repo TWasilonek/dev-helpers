@@ -1,3 +1,3 @@
 export default {
-  translate: jest.fn().mockReturnValueOnce({ data: {} }),
+  translate: jest.fn(),
 };

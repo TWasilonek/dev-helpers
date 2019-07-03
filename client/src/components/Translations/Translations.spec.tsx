@@ -1,12 +1,18 @@
 import React from 'react';
-import { fireEvent, render, waitForElement } from 'react-testing-library';
+import {
+  fireEvent,
+  render,
+  waitForElement,
+  act,
+  cleanup,
+} from 'react-testing-library';
 import Translations from './Translations';
-import translationApiMock from '../../__mocks__/translationApiMock';
+import translationApi from '../../api/translationApi';
+
+translationApi.translate = jest.fn();
 
 const setup = () => {
-  const utils = render(
-    <Translations />
-  );
+  const utils = render(<Translations />);
 
   const form = utils.getByTestId('translation-form');
   const input = utils.getByLabelText('Text to translate');
@@ -21,15 +27,18 @@ const setup = () => {
     inputLangSelect,
     // result,
     // placeholder,
-  //  submit,
+    //  submit,
     ...utils,
   };
 };
 
+afterEach(cleanup);
+
 const checkTranslationOutput = (elem: Element, expectedText: string) => {
-  const output = elem.querySelector('[data-testid=result-output]');
-  expect(output).toHaveTextContent(expectedText);
-}
+  expect(elem).toBeInTheDocument();
+  // const output = elem.querySelector('[data-testid=result-output]');
+  expect(elem).toHaveTextContent(expectedText);
+};
 
 describe('Transaltions', () => {
   test('shows the input with placeholder text', () => {
@@ -45,30 +54,28 @@ describe('Transaltions', () => {
     checkTranslationOutput(placeholder, 'Bienvenido');
   });
 
-  // TODO: test if submit calls the correct function with correct input
   test.only('submits the correct data', async () => {
-    translationApiMock.translate.mockRejectedValueOnce({ data: { named: '', unnamed: 'Hola' }});
-    // TODO: form is filled
+    // TODO: get rid of TS error
+    translationApi.translate.mockResolvedValueOnce({
+      data: {
+        es: { named: '', unnamed: 'Hola' },
+      },
+    });
+
     const { input, form, getByTestId } = setup();
     const text = 'Hello';
 
-    fireEvent.change(input, { target: {  value: text } });
-    fireEvent.submit(form);
+    act(() => {
+      fireEvent.change(input, { target: { value: text } });
+      fireEvent.submit(form);
+    });
 
-    // we expect the "loading" span to be displayed
+    //TODO: we expect the "loading" span to be displayed
     // expect(getByTestId("loading")).toHaveTextContent("Loading data...");
-
-    // wait for the result to be rendered again (loading is finished)
     const result = await waitForElement(() => getByTestId('result-output'));
-
-    // Now with the resolvedSpan in hand, we can ensure it has the correct content
-    // expect(resolvedText).toHaveTextContent('Hola');
     checkTranslationOutput(result, 'Hola');
 
-    // expect(translationApiMock.translate).toHaveBeenCalledTimes(1);
-    // expect(translationApiMock.translate).toHaveBeenCalledWith(text);
-
+    expect(translationApi.translate).toHaveBeenCalledTimes(1);
+    //TODO: expect(translationApiMock.translate).toHaveBeenCalledWith(data);
   });
-
-  // TODO: create service for AJAX (with retryability etc.) that will process the request for language
 });

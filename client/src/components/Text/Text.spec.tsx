@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render } from 'react-testing-library';
+import { fireEvent, render, cleanup } from 'react-testing-library';
 
 import Text, { ITransformation } from './Text';
 
@@ -17,9 +17,7 @@ const FAKE_TRANSFORMATIONS: ITransformation[] = [
 ];
 
 const setup = () => {
-  const utils = render(
-    <Text transformations={FAKE_TRANSFORMATIONS} />
-  );
+  const utils = render(<Text transformations={FAKE_TRANSFORMATIONS} />);
 
   const input = utils.getByLabelText('Text to transform');
   const results = utils.getAllByTestId('result');
@@ -28,17 +26,19 @@ const setup = () => {
   const doubleQuotesSwitch = utils.getByLabelText('Double quotes');
 
   return {
-   input,
-   results,
-   noQuotesSwitch,
-   singleQuotesSwitch,
-   doubleQuotesSwitch,
+    input,
+    results,
+    noQuotesSwitch,
+    singleQuotesSwitch,
+    doubleQuotesSwitch,
     ...utils,
   };
 };
 
+afterEach(cleanup);
+
 describe('Text', () => {
-  const INPUT = 'test text'
+  const INPUT = 'test text';
 
   test('shows correct number of result fields', () => {
     const { results } = setup();
@@ -61,20 +61,27 @@ describe('Text', () => {
 
     results.forEach((res, i) => {
       const output = res.querySelector('[data-testid=result-output]');
-      expect(output.textContent).toEqual(FAKE_TRANSFORMATIONS[i].transformation(INPUT));
+      expect(output.textContent).toEqual(
+        FAKE_TRANSFORMATIONS[i].transformation(INPUT)
+      );
     });
   });
 
   describe('changing quotes', () => {
-    function checkQuotes(input: any, results: any[], switchBtn: any, regex: RegExp) {
+    function checkQuotes(
+      input: any,
+      results: any[],
+      switchBtn: any,
+      regex: RegExp
+    ) {
       fireEvent.change(input, { target: { value: INPUT } });
       fireEvent.click(switchBtn);
-    
+
       results.forEach(res => {
         const output = res.querySelector('[data-testid=result-output]');
         expect(output.textContent).toEqual(expect.stringMatching(regex));
       });
-    };
+    }
 
     test('selecting single quotes works', () => {
       const { input, results, singleQuotesSwitch } = setup();

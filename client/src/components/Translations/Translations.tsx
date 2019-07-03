@@ -1,7 +1,7 @@
 import React, { SFC, Fragment, useState, useEffect, useRef } from 'react';
 import { Form, TextArea, Select } from 'semantic-ui-react';
 import Result from '../Result/Result';
-import { translate, ITranslationData } from '../../api/translationApi';
+import translationApi, { ITranslationData } from '../../api/translationApi';
 
 const OPTIONS = [
   {
@@ -33,14 +33,13 @@ const InlineStyle = () => (
   </style>
 );
 
-
 const defaultData: ITranslationData = {
   strings: {
     named: {},
     unnamed: [],
   },
   langs: ['es'],
-}
+};
 
 const Translations: SFC = () => {
   const placeholder = 'Bienvenido';
@@ -51,8 +50,8 @@ const Translations: SFC = () => {
   const isFirstRun = useRef(true);
   useEffect(() => {
     async function postTranslations() {
-      const result = await translate(data);
-      console.log('result', result);
+      const result = await translationApi.translate(data);
+      console.log('result', result.data);
       const translatedText = result.data['es'].unnamed;
       setTranslation(translatedText);
     }
@@ -61,7 +60,7 @@ const Translations: SFC = () => {
       isFirstRun.current = false;
       return;
     }
-    
+
     postTranslations();
   }, [data]); // this effect will run only when 'data' changes
 
@@ -73,14 +72,17 @@ const Translations: SFC = () => {
         unnamed: [sourceText],
       },
       langs: ['es'],
-    }
+    };
 
     setData(data);
-  }
+  };
 
-  const handleChange = (e: Event, { name, value }: { name: string, value: string }) => {
+  const handleChange = (
+    e: Event,
+    { name, value }: { name: string; value: string }
+  ) => {
     setSourceText(value);
-  }
+  };
 
   return (
     <Fragment>
@@ -88,15 +90,19 @@ const Translations: SFC = () => {
 
       <div className="section-wrapper">
         <h1>Translations</h1>
-        <Form className="inputs-wrapper" data-testid="translation-form" onSubmit={onSubmit}>
-           <Form.Field
+        <Form
+          className="inputs-wrapper"
+          data-testid="translation-form"
+          onSubmit={onSubmit}
+        >
+          <Form.Field
             control={Select}
             options={OPTIONS}
-            label={{ children: "Language", htmlFor: "input-language" }}
+            label={{ children: 'Language', htmlFor: 'input-language' }}
             placeholder="Select Language"
             defaultValue="en"
             search
-            searchInput={{ id: "input-language" }}
+            searchInput={{ id: 'input-language' }}
           />
           <Form.Field
             control={TextArea}
@@ -107,11 +113,11 @@ const Translations: SFC = () => {
             id="source-text"
             onChange={handleChange}
           />
-          <Form.Button type='submit' data-testid="submit">
+          <Form.Button type="submit" data-testid="submit">
             Submit
           </Form.Button>
         </Form>
-        
+
         <Result
           className="text-result"
           clipboardText={translation}
@@ -121,7 +127,7 @@ const Translations: SFC = () => {
         />
       </div>
     </Fragment>
-  )
-}
+  );
+};
 
 export default Translations;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from 'react-testing-library';
+import { render, cleanup } from 'react-testing-library';
 
 import Result from './Result';
 
@@ -7,9 +7,15 @@ const HEADER = 'Header';
 const TEXT = 'outptup text';
 const PLACEHOLDER = 'placeholder';
 
-const setup = ({ textString, placeholderString }: {textString?: string, placeholderString?: string}) => {
+const setup = ({
+  textString,
+  placeholderString,
+}: {
+  textString?: string;
+  placeholderString?: string;
+}) => {
   const utils = render(
-    <Result header={HEADER} text={textString} placeholder={placeholderString}/>
+    <Result header={HEADER} text={textString} placeholder={placeholderString} />
   );
   const title = utils.getByTestId('result-header');
 
@@ -18,6 +24,8 @@ const setup = ({ textString, placeholderString }: {textString?: string, placehol
     ...utils,
   };
 };
+
+afterEach(cleanup);
 
 describe('Result', () => {
   test('shows the inputs in the correct places', () => {
@@ -29,7 +37,10 @@ describe('Result', () => {
   });
 
   test('when no text is passed, it shows the placeholder', () => {
-    const { getByTestId } = setup({ textString: '', placeholderString: PLACEHOLDER });
+    const { getByTestId } = setup({
+      textString: '',
+      placeholderString: PLACEHOLDER,
+    });
     const placeholder = getByTestId('result-placeholder');
 
     expect(placeholder).toHaveTextContent(PLACEHOLDER);
