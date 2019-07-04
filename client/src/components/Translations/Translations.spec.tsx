@@ -36,7 +36,6 @@ afterEach(cleanup);
 
 const checkTranslationOutput = (elem: Element, expectedText: string) => {
   expect(elem).toBeInTheDocument();
-  // const output = elem.querySelector('[data-testid=result-output]');
   expect(elem).toHaveTextContent(expectedText);
 };
 
@@ -54,7 +53,7 @@ describe('Transaltions', () => {
     checkTranslationOutput(placeholder, 'Bienvenido');
   });
 
-  test.only('submits the correct data', async () => {
+  test('submits the correct data', async () => {
     // TODO: get rid of TS error
     translationApi.translate.mockResolvedValueOnce({
       data: {
@@ -64,6 +63,13 @@ describe('Transaltions', () => {
 
     const { input, form, getByTestId } = setup();
     const text = 'Hello';
+    const requestBody = {
+      strings: {
+        named: {},
+        unnamed: [text],
+      },
+      langs: ['es'],
+    };
 
     act(() => {
       fireEvent.change(input, { target: { value: text } });
@@ -72,10 +78,9 @@ describe('Transaltions', () => {
 
     //TODO: we expect the "loading" span to be displayed
     // expect(getByTestId("loading")).toHaveTextContent("Loading data...");
+    
     const result = await waitForElement(() => getByTestId('result-output'));
     checkTranslationOutput(result, 'Hola');
-
     expect(translationApi.translate).toHaveBeenCalledTimes(1);
-    //TODO: expect(translationApiMock.translate).toHaveBeenCalledWith(data);
   });
 });

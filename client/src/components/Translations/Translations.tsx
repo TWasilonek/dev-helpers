@@ -2,6 +2,7 @@ import React, { SFC, Fragment, useState, useEffect, useRef } from 'react';
 import { Form, TextArea, Select } from 'semantic-ui-react';
 import Result from '../Result/Result';
 import translationApi, { ITranslationData } from '../../api/translationApi';
+import { mapSourceTextForTranslation } from '../../utils/translationsUtils';
 
 const OPTIONS = [
   {
@@ -56,6 +57,7 @@ const Translations: SFC = () => {
       setTranslation(translatedText);
     }
 
+    // don't run on start
     if (isFirstRun.current) {
       isFirstRun.current = false;
       return;
@@ -65,7 +67,7 @@ const Translations: SFC = () => {
   }, [data]); // this effect will run only when 'data' changes
 
   const onSubmit = () => {
-    console.log('submit', sourceText);
+    const strings = mapSourceTextForTranslation(sourceText);
     const data: ITranslationData = {
       strings: {
         named: {},
