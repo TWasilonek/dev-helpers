@@ -69,7 +69,7 @@ const Translations: SFC = () => {
       strings: [strings],
       langs: ['es'],
     };
-
+    console.log(data);
     setData(data);
   };
 

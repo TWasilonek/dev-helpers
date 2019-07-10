@@ -8,33 +8,11 @@ const Translate = require('@google-cloud/translate');
 const translate = new Translate.Translate();
 
 async function makeTranslations (strings, targetLang) {
-  /*
-    named:
-    {
-      'text.name': 'some text',
-      'text.name': 'some text',
-    },
-    unnamed:
-    [
-      'some text',
-      'some text'
-    ]
-  */
-  const results = {
-    named: {},
-    unnamed: [],
-  };
+  let results = [];
   
-  if (strings.unnamed.length) {
-    const [translation] = await translate.translate(strings.unnamed, targetLang);
-    results.unnamed = translation;
-  }
-
-  const values = Object.values(strings.named);
-  const keys = Object.keys(strings.named);
-  if (values.length) {
-    const [translation] = await translate.translate(values, targetLang);
-    results.named = keys.reduce((acc, key, i) => ({ ...acc, [key]: translation[i] }), {});
+  if (strings.length) {
+    const [translation] = await translate.translate(strings, targetLang);
+    results = translation;
   }
     
   return results;
@@ -46,12 +24,11 @@ exports.translateText = async (req, res) => {
   if (req.method === 'OPTIONS') {
     // Send response to OPTIONS requests
     res.set('Access-Control-Allow-Methods', 'POST');
+    res.set('Access-Control-Allow-Headers', 'Content-Type');
     res.set('Access-Control-Max-Age', '3600');
     res.status(204).send('');
   } else {
     const { langs, strings } = req.body;
-    console.log("langs", langs);
-    console.log("strings", strings);
 
     if (!langs || !langs.length) {
       res.status(500).send('Missing "langs"');
