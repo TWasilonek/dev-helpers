@@ -34,34 +34,40 @@ const InlineStyle = () => (
   </style>
 );
 
-const defaultData: ITranslationData = {
-  strings: [],
-  langs: ['es'],
-};
+// const defaultData: ITranslationData = {
+//   strings: [],
+//   langs: ['es'],
+// };
 
 const Translations: SFC = () => {
   const placeholder = 'Bienvenido';
   const [sourceText, setSourceText] = useState('');
   const [translation, setTranslation] = useState('');
 
-  const [data, setData] = useState(defaultData);
-  const isFirstRun = useRef(true);
-  useEffect(() => {
-    async function postTranslations() {
-      const result = await translationApi.translate(data);
-      console.log('result', result.data);
-      const translatedText = result.data['es'];
-      setTranslation(translatedText);
-    }
+  // const [data, setData] = useState(defaultData);
+  // const isFirstRun = useRef(true);
 
-    // don't run on start
-    if (isFirstRun.current) {
-      isFirstRun.current = false;
-      return;
-    }
+  const postTranslations = async (data: ITranslationData) => {
+    const result = await translationApi.translate(data);
+    const translatedText = result.data['es'];
+    setTranslation(translatedText);
+  }
 
-    postTranslations();
-  }, [data]); // this effect will run only when 'data' changes
+  // useEffect(() => {
+  //   async function postTranslations() {
+  //     const result = await translationApi.translate(data);
+  //     const translatedText = result.data['es'];
+  //     setTranslation(translatedText);
+  //   }
+
+  //   // don't run on start
+  //   if (isFirstRun.current) {
+  //     isFirstRun.current = false;
+  //     return;
+  //   }
+
+  //   postTranslations();
+  // }, [data]); // this effect will run only when 'data' changes
 
   const onSubmit = () => {
     const strings = transformLines(sanitizeSpaces, sourceText);
@@ -69,8 +75,8 @@ const Translations: SFC = () => {
       strings: [strings],
       langs: ['es'],
     };
-    console.log(data);
-    setData(data);
+    // setData(data);
+    postTranslations(data);
   };
 
   const handleChange = (
