@@ -20,7 +20,7 @@ exports.getLanguages = async (req, res) => {
   } else {
     try {
       const [languages] = await translate.getLanguages();
-      const data = languages.forEach(lang => isoLangs.find(l => l.code === lang.code) || lang);
+      const data = languages.map(lang => isoLangs.find(l => l.code === lang.code) || lang);
       res.status(200).send(data);
     } catch(e){
       console.error(e);
