@@ -46,7 +46,7 @@ exports.translateText = async (req, res) => {
       res.status(200).send(response);
     } catch(e){
       console.error(e);
-      res.status(500).send('Something went wrong');
+      res.status(500).send(e);
     }
   }
 };

@@ -3,6 +3,7 @@ import { Form, TextArea, Select } from 'semantic-ui-react';
 import Result from '../Result/Result';
 import translationApi, { ITranslationData } from '../../api/translationApi';
 import { transformLines, sanitizeSpaces } from '../../utils/stringTransformations';
+import { AxiosResponse } from 'axios';
 
 const OPTIONS = [
   {
@@ -34,24 +35,20 @@ const InlineStyle = () => (
   </style>
 );
 
-// const defaultData: ITranslationData = {
-//   strings: [],
-//   langs: ['es'],
-// };
-
 const Translations: SFC = () => {
   const placeholder = 'Bienvenido';
   const [sourceText, setSourceText] = useState('');
   const [translation, setTranslation] = useState('');
+  const [sourceLang, setSourceLang] = useState('');
 
-  // const [data, setData] = useState(defaultData);
-  // const isFirstRun = useRef(true);
-
-  const postTranslations = async (data: ITranslationData) => {
-    const result = await translationApi.translate(data);
-    const translatedText = result.data['es'];
-    setTranslation(translatedText);
-  }
+  const [sourceLangOptions, setSourceLangOptions] = useState<AxiosResponse | any[]>([]);
+  useEffect(() => {
+    async function getSourceLanguagesList() {
+      const response = await translationApi.getLanguages();
+      setSourceLangOptions(response);
+    }
+    getSourceLanguagesList();
+  }, []);
 
   // useEffect(() => {
   //   async function postTranslations() {
@@ -69,13 +66,18 @@ const Translations: SFC = () => {
   //   postTranslations();
   // }, [data]); // this effect will run only when 'data' changes
 
-  const onSubmit = () => {
+  const postTranslations = async (data: ITranslationData) => {
+    const result = await translationApi.translate(data);
+    const translatedText = result.data['es'];
+    setTranslation(translatedText);
+  }
+
+  const handleSubmit = () => {
     const strings = transformLines(sanitizeSpaces, sourceText);
     const data: ITranslationData = {
       strings: [strings],
       langs: ['es'],
     };
-    // setData(data);
     postTranslations(data);
   };
 
@@ -95,7 +97,7 @@ const Translations: SFC = () => {
         <Form
           className="inputs-wrapper"
           data-testid="translation-form"
-          onSubmit={onSubmit}
+          onSubmit={handleSubmit}
         >
           <Form.Field
             control={Select}

@@ -10,6 +10,7 @@ import Translations from './Translations';
 import translationApi from '../../api/translationApi';
 
 translationApi.translate = jest.fn();
+translationApi.getLanguages = jest.fn();
 
 const setup = () => {
   const utils = render(<Translations />);
@@ -53,31 +54,43 @@ describe('Transaltions', () => {
     checkTranslationOutput(placeholder, 'Bienvenido');
   });
 
-  test('submits the correct data', async () => {
-    // TODO: get rid of TS error
-    translationApi.translate.mockResolvedValueOnce({
-      data: {
-        es: ['Hola'],
-      },
+  test('retrieves available languages for translation on load', () => {
+    translationApi.getLanguages.mockResolvedValueOnce([
+      {"code":"af"},{"code":"am"},{"code":"ar"},
+    ]);
+
+    const { inputLangSelect } = setup();
+
+    expect(translationApi.getLanguages).toHaveBeenCalled();
+    // TODO: check that the langs options are filled correctly
+    // TODO: check the default source lang
+
+    // TODO: perfomrance improvement - right now it is being called 3 times on load.
+    // expect(translationApi.getLanguages).toHaveBeenCalledTimes(1);
+  });
+
+  describe('submit translation', () => {
+    test('submits correct data and shows response correctly', async () => {
+      translationApi.translate.mockResolvedValueOnce({
+        data: {
+          es: ['Hola'],
+        },
+      });
+  
+      const { input, form, getByTestId } = setup();
+      const text = 'Hello';
+  
+      act(() => {
+        fireEvent.change(input, { target: { value: text } });
+        fireEvent.submit(form);
+      });
+  
+      //TODO: we expect the "loading" span to be displayed
+      // expect(getByTestId("loading")).toHaveTextContent("Loading data...");
+      
+      const result = await waitForElement(() => getByTestId('result-output'));
+      checkTranslationOutput(result, 'Hola');
+      expect(translationApi.translate).toHaveBeenCalledTimes(1);
     });
-
-    const { input, form, getByTestId } = setup();
-    const text = 'Hello';
-    // const requestBody = {
-    //   strings: [text],
-    //   langs: ['es'],
-    // };
-
-    act(() => {
-      fireEvent.change(input, { target: { value: text } });
-      fireEvent.submit(form);
-    });
-
-    //TODO: we expect the "loading" span to be displayed
-    // expect(getByTestId("loading")).toHaveTextContent("Loading data...");
-    
-    const result = await waitForElement(() => getByTestId('result-output'));
-    checkTranslationOutput(result, 'Hola');
-    expect(translationApi.translate).toHaveBeenCalledTimes(1);
   });
 });
