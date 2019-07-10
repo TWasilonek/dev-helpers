@@ -2,7 +2,7 @@ import React, { SFC, Fragment, useState, useEffect, useRef } from 'react';
 import { Form, TextArea, Select } from 'semantic-ui-react';
 import Result from '../Result/Result';
 import translationApi, { ITranslationData } from '../../api/translationApi';
-import { mapSourceTextForTranslation } from '../../utils/translationsUtils';
+import { transformLines, sanitizeSpaces } from '../../utils/stringTransformations';
 
 const OPTIONS = [
   {
@@ -35,10 +35,7 @@ const InlineStyle = () => (
 );
 
 const defaultData: ITranslationData = {
-  strings: {
-    named: {},
-    unnamed: [],
-  },
+  strings: [],
   langs: ['es'],
 };
 
@@ -53,7 +50,7 @@ const Translations: SFC = () => {
     async function postTranslations() {
       const result = await translationApi.translate(data);
       console.log('result', result.data);
-      const translatedText = result.data['es'].unnamed;
+      const translatedText = result.data['es'];
       setTranslation(translatedText);
     }
 
@@ -67,12 +64,9 @@ const Translations: SFC = () => {
   }, [data]); // this effect will run only when 'data' changes
 
   const onSubmit = () => {
-    const strings = mapSourceTextForTranslation(sourceText);
+    const strings = transformLines(sanitizeSpaces, sourceText);
     const data: ITranslationData = {
-      strings: {
-        named: {},
-        unnamed: [sourceText],
-      },
+      strings: [strings],
       langs: ['es'],
     };
 

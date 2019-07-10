@@ -57,19 +57,16 @@ describe('Transaltions', () => {
     // TODO: get rid of TS error
     translationApi.translate.mockResolvedValueOnce({
       data: {
-        es: { named: '', unnamed: 'Hola' },
+        es: ['Hola'],
       },
     });
 
     const { input, form, getByTestId } = setup();
     const text = 'Hello';
-    const requestBody = {
-      strings: {
-        named: {},
-        unnamed: [text],
-      },
-      langs: ['es'],
-    };
+    // const requestBody = {
+    //   strings: [text],
+    //   langs: ['es'],
+    // };
 
     act(() => {
       fireEvent.change(input, { target: { value: text } });
