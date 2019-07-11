@@ -5,6 +5,7 @@ import {
   waitForElement,
   act,
   cleanup,
+  wait,
 } from 'react-testing-library';
 import Translations from './Translations';
 import translationApi from '../../api/translationApi';
@@ -17,7 +18,8 @@ const setup = () => {
 
   const form = utils.getByTestId('translation-form');
   const input = utils.getByLabelText('Text to translate');
-  const inputLangSelect = utils.getAllByLabelText('Language');
+  const sourceLangSelect = utils.getByLabelText('Source Language');
+  const targetLangSelect = utils.getByLabelText('Target Language');
   // const result = utils.getByTestId('result-output');
   // const placeholder = utils.getByTestId('result-placeholder');
   // const submit = utils.getByTestId('submit');
@@ -25,7 +27,8 @@ const setup = () => {
   return {
     form,
     input,
-    inputLangSelect,
+    sourceLangSelect,
+    targetLangSelect,
     // result,
     // placeholder,
     //  submit,
@@ -54,16 +57,25 @@ describe('Transaltions', () => {
     checkTranslationOutput(placeholder, 'Bienvenido');
   });
 
-  test('retrieves available languages for translation on load', () => {
-    translationApi.getLanguages.mockResolvedValueOnce([
-      {"code":"af"},{"code":"am"},{"code":"ar"},
-    ]);
+  test('retrieves available languages for translation on load', async () => {
+    const testLangDropdown = (dropdownElem: HTMLElement, length: number) => {
+      fireEvent.click(dropdownElem);
+      const options = dropdownElem.querySelectorAll('[role=option]');
+      expect(options).toHaveLength(length);
+    }
 
-    const { inputLangSelect } = setup();
+    translationApi.getLanguages.mockResolvedValueOnce({ data: [
+      {code: "af", name: "Afrikaans"},
+      {code: "sq", name: "Albanian"},
+      {code: "am", name: "Amharic"},
+    ]});
+
+    const { getByTestId, form } = setup();
+    await wait(() => form.querySelector('.dropdown:not(.loading)'));
 
     expect(translationApi.getLanguages).toHaveBeenCalled();
-    // TODO: check that the langs options are filled correctly
-    // TODO: check the default source lang
+    testLangDropdown(getByTestId('source-language'), 3);
+    testLangDropdown(getByTestId('target-language'), 3);
 
     // TODO: perfomrance improvement - right now it is being called 3 times on load.
     // expect(translationApi.getLanguages).toHaveBeenCalledTimes(1);

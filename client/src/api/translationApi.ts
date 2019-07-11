@@ -2,14 +2,16 @@ import axios from 'axios';
 
 const BASE_URI = 'https://europe-west1-dev-helpers.cloudfunctions.net';
 
-export type ITranslationData = {
+export type TranslationData = {
   strings: string[];
   langs: string[];
 } | {};
 
-const translate = (data: ITranslationData) => axios.post(`${BASE_URI}/translateText`, data);
+export type GetLanguagesType = { name: string, code: string };
 
-const getLanguages = () => axios.get<any[]>(`${BASE_URI}/getLanguages`);
+const translate = (data: TranslationData) => axios.post(`${BASE_URI}/translateText`, data);
+
+const getLanguages = () => axios.get<GetLanguagesType[]>(`${BASE_URI}/getLanguages`);
 
 const translationApi = {
   translate: translate,
