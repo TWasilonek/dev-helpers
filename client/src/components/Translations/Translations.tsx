@@ -76,7 +76,7 @@ const Translations: SFC = () => {
 
   const postTranslations = async (data: TranslationData) => {
     const result = await translationApi.translate(data);
-    const translatedText = result.data['es'];
+    const translatedText = result.data[targetLang];
     setTranslation(translatedText);
   }
 
