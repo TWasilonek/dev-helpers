@@ -20,18 +20,14 @@ const setup = () => {
   const input = utils.getByLabelText('Text to translate');
   const sourceLangSelect = utils.getByLabelText('Source Language');
   const targetLangSelect = utils.getByLabelText('Target Language');
-  // const result = utils.getByTestId('result-output');
-  // const placeholder = utils.getByTestId('result-placeholder');
-  // const submit = utils.getByTestId('submit');
+  const addLangBtn = utils.getByText('Add target language');
 
   return {
     form,
     input,
     sourceLangSelect,
     targetLangSelect,
-    // result,
-    // placeholder,
-    //  submit,
+    addLangBtn,
     ...utils,
   };
 };
@@ -59,7 +55,9 @@ describe('Transaltions', () => {
 
   test('retrieves available languages for translation on load', async () => {
     const testLangDropdown = (dropdownElem: HTMLElement, length: number) => {
-      fireEvent.click(dropdownElem);
+      act(() => {
+        fireEvent.click(dropdownElem);
+      });
       const options = dropdownElem.querySelectorAll('[role=option]');
       expect(options).toHaveLength(length);
     }
@@ -103,6 +101,38 @@ describe('Transaltions', () => {
       const result = await waitForElement(() => getByTestId('result-output'));
       checkTranslationOutput(result, 'Hola');
       expect(translationApi.translate).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('adding target languages', () => {
+    test('can add several target languages', () => {
+      const { addLangBtn, getAllByTestId } = setup();
+
+      act(() => {
+        fireEvent.click(addLangBtn);
+      });
+
+      expect(getAllByTestId('target-lang')).toHaveLength(2);
+    });
+
+    test('translations are shown in the correct result field', () => {
+      translationApi.translate.mockResolvedValueOnce({
+        data: {
+          es: ['Hola'],
+          pl: ['Czesc'],
+        },
+      });
+
+      const { addLangBtn, getAllByTestId } = setup();
+
+      act(() => {
+        fireEvent.click(addLangBtn);
+        // TODO: change the result languages to 'es' and 'pl'
+        // submit translations
+      });
+
+      // check if results are showing
+      expect(true).toBe(false);
     });
   });
 });

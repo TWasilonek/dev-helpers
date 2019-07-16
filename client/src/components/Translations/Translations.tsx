@@ -46,7 +46,7 @@ const Translations: SFC = () => {
   const [sourceText, setSourceText] = useState('');
   const [translation, setTranslation] = useState('');
   const [sourceLang, setSourceLang] = useState('');
-  const [targetLang, setTargetLang] = useState('');
+  const [targetLangs, setTargetLangs] = useState(['en']);
 
   const [langOptions, setlangOptions] = useState<GetLanguagesType[] | any[]>([]);
   useEffect(() => {
@@ -76,15 +76,16 @@ const Translations: SFC = () => {
 
   const postTranslations = async (data: TranslationData) => {
     const result = await translationApi.translate(data);
-    const translatedText = result.data[targetLang];
-    setTranslation(translatedText);
+    // TODO: iterate through result.data adn assign translations to languages
+    // const translatedText = result.data[targetLang];
+    // setTranslation(translatedText);
   }
 
   const handleSubmit = () => {
     const strings = transformLines(sanitizeSpaces, sourceText);
     const data: TranslationData = {
       strings: [strings],
-      langs: [targetLang],
+      langs: [...targetLangs],
     };
     postTranslations(data);
   };
@@ -98,9 +99,21 @@ const Translations: SFC = () => {
 
   const hadleTargateLangChange = (
     e: Event,
-    { name, value }: { name: string; value: string }
+    { name, value }: { name: string; value: string },
+    index: number
   ) => {
-    setTargetLang(value);
+    // TODO: targetLangs will be better as key=value pairs ? key = index?
+    const newLangs = targetLangs.map((lang: string, i: number) => {
+      if (index === i) {
+        return value;
+      }
+      return lang;
+    });
+    setTargetLangs(newLangs);
+  }
+
+  const handleAddTargeLang = () => {
+    setTargetLangs([...targetLangs, 'en']); 
   }
 
   const renderLangDropdown = (
@@ -120,7 +133,28 @@ const Translations: SFC = () => {
       searchInput={{ id }}
       data-testid={testId}
     />
-  )
+  );
+
+  const renderTargetLang = (lang: string) => (
+    <div data-testid="target-lang">
+      {renderLangDropdown({
+        id: 'target-language',
+        label: 'Target Language',
+        placeholder: 'Select language',
+        defaultValue: lang,
+        onChange: hadleTargateLangChange,
+        testId: 'target-language'
+      })}
+      <Result
+        className="text-result"
+        clipboardText={translation}
+        text={translation}
+        placeholder={placeholder}
+        header="Translation"
+      />
+    </div>
+  );
+
 
   return (
     <Fragment>
@@ -150,27 +184,15 @@ const Translations: SFC = () => {
             onChange={handleChange}
           />
           <Form.Button type="submit" data-testid="submit">
-            Submit
+            Translate
           </Form.Button>
         </Form>
 
-        <div>
-          {renderLangDropdown({
-            id: 'target-language',
-            label: 'Target Language',
-            placeholder: 'Select language',
-            defaultValue: 'en',
-            onChange: hadleTargateLangChange,
-            testId: 'target-language'
-          })}
-          <Result
-            className="text-result"
-            clipboardText={translation}
-            text={translation}
-            placeholder={placeholder}
-            header="Translation"
-          />
-        </div>
+        {targetLangs.map(renderTargetLang)}
+
+        <button type="button" onClick={handleAddTargeLang}>
+          Add target language
+        </button>
       </div>
     </Fragment>
   );
