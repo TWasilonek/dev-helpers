@@ -7,6 +7,7 @@ import {
   cleanup,
   wait,
 } from 'react-testing-library';
+import userEvent from "@testing-library/user-event";
 import Translations from './Translations';
 import translationApi from '../../api/translationApi';
 
@@ -40,6 +41,14 @@ const checkTranslationOutput = (elem: Element, expectedText: string) => {
 };
 
 describe('Transaltions', () => {
+  beforeEach(() => {
+    translationApi.getLanguages.mockResolvedValueOnce({ data: [
+      {code: "en", name: "English"},
+      {code: "es", name: "Spanish"},
+      {code: "am", name: "Amharic"},
+    ]});
+  });
+
   test('shows the input with placeholder text', () => {
     const { input } = setup();
     expect(input).toHaveAttribute('placeholder', 'Welcome');
@@ -62,25 +71,16 @@ describe('Transaltions', () => {
       expect(options).toHaveLength(length);
     }
 
-    translationApi.getLanguages.mockResolvedValueOnce({ data: [
-      {code: "af", name: "Afrikaans"},
-      {code: "sq", name: "Albanian"},
-      {code: "am", name: "Amharic"},
-    ]});
-
     const { getByTestId, form } = setup();
     await wait(() => form.querySelector('.dropdown:not(.loading)'));
 
     expect(translationApi.getLanguages).toHaveBeenCalled();
     testLangDropdown(getByTestId('source-language'), 3);
-    testLangDropdown(getByTestId('target-language'), 3);
-
-    // TODO: perfomrance improvement - right now it is being called 3 times on load.
-    // expect(translationApi.getLanguages).toHaveBeenCalledTimes(1);
+    testLangDropdown(getByTestId('target-language-en'), 3);
   });
 
   describe('submit translation', () => {
-    test('submits correct data and shows response correctly', async () => {
+    test.only('submits correct data and shows response correctly', async () => {
       translationApi.translate.mockResolvedValueOnce({
         data: {
           es: ['Hola'],
@@ -90,15 +90,17 @@ describe('Transaltions', () => {
       const { input, form, getByTestId } = setup();
       const text = 'Hello';
   
-      act(() => {
-        fireEvent.change(input, { target: { value: text } });
+      act(async () => {
+        // select spanish, this will change the test id to 'target-language-es'
+        userEvent.selectOptions(getByTestId('target-language-en'), ['es']);
+        userEvent.type(input, text);
         fireEvent.submit(form);
       });
+
+      // expect(translationApi.translate).toHaveBeenCalledTimes(1);
   
-      //TODO: we expect the "loading" span to be displayed
-      // expect(getByTestId("loading")).toHaveTextContent("Loading data...");
-      
-      const result = await waitForElement(() => getByTestId('result-output'));
+      await wait(() => getByTestId('result-output-es')); 
+      const result = getByTestId('result-output-es');
       checkTranslationOutput(result, 'Hola');
       expect(translationApi.translate).toHaveBeenCalledTimes(1);
     });

@@ -3,15 +3,6 @@ import { Form, TextArea, Select, FormFieldProps } from 'semantic-ui-react';
 import Result from '../Result/Result';
 import translationApi, { TranslationData, GetLanguagesType } from '../../api/translationApi';
 import { transformLines, sanitizeSpaces } from '../../utils/stringTransformations';
-import { AxiosResponse } from 'axios';
-
-const OPTIONS = [
-  {
-    text: 'English',
-    value: 'en',
-    key: 'en',
-  },
-];
 
 const InlineStyle = () => (
   <style>
@@ -41,10 +32,13 @@ const mapOptions = (data: GetLanguagesType[]) => data.map(el => ({
   key:  el.code,
 }));
 
+type EventData = { name: string; value: string };
+interface TranslationsState { [lang: string]: string[] };
+
 const Translations: SFC = () => {
   const placeholder = 'Bienvenido';
   const [sourceText, setSourceText] = useState('');
-  const [translation, setTranslation] = useState('');
+  const [translations, setTranslations] = useState<TranslationsState>({});
   const [sourceLang, setSourceLang] = useState('');
   const [targetLangs, setTargetLangs] = useState(['en']);
 
@@ -58,27 +52,9 @@ const Translations: SFC = () => {
     getSourceLanguagesList();
   }, []);
 
-  // useEffect(() => {
-  //   async function postTranslations() {
-  //     const result = await translationApi.translate(data);
-  //     const translatedText = result.data['es'];
-  //     setTranslation(translatedText);
-  //   }
-
-  //   // don't run on start
-  //   if (isFirstRun.current) {
-  //     isFirstRun.current = false;
-  //     return;
-  //   }
-
-  //   postTranslations();
-  // }, [data]); // this effect will run only when 'data' changes
-
   const postTranslations = async (data: TranslationData) => {
     const result = await translationApi.translate(data);
-    // TODO: iterate through result.data adn assign translations to languages
-    // const translatedText = result.data[targetLang];
-    // setTranslation(translatedText);
+    setTranslations({ ...result.data });
   }
 
   const handleSubmit = () => {
@@ -92,14 +68,13 @@ const Translations: SFC = () => {
 
   const handleChange = (
     e: Event,
-    { name, value }: { name: string; value: string }
+    { name, value }: EventData
   ) => {
     setSourceText(value);
   };
 
   const hadleTargateLangChange = (
-    e: Event,
-    { name, value }: { name: string; value: string },
+    { name, value }: EventData,
     index: number
   ) => {
     // TODO: targetLangs will be better as key=value pairs ? key = index?
@@ -135,25 +110,31 @@ const Translations: SFC = () => {
     />
   );
 
-  const renderTargetLang = (lang: string) => (
-    <div data-testid="target-lang">
-      {renderLangDropdown({
-        id: 'target-language',
-        label: 'Target Language',
-        placeholder: 'Select language',
-        defaultValue: lang,
-        onChange: hadleTargateLangChange,
-        testId: 'target-language'
-      })}
-      <Result
-        className="text-result"
-        clipboardText={translation}
-        text={translation}
-        placeholder={placeholder}
-        header="Translation"
-      />
-    </div>
-  );
+  const renderTargetLang = (lang: string, i: number) => {
+    const translationText = translations[lang] ? translations[lang].join('\n') : '';
+    // TODO: outputTestId={`result-output-${lang}`} lang = 'en' all the times
+    console.log('lang passed', lang);
+    return (
+      <div data-testid="target-lang">
+        {renderLangDropdown({
+          id: 'target-language',
+          label: 'Target Language',
+          placeholder: 'Select language',
+          defaultValue: lang,
+          onChange: (e: Event, data: EventData) => hadleTargateLangChange(data, i),
+          testId: `target-language-${lang}`
+        })}
+        <Result
+          className="text-result"
+          clipboardText={translationText}
+          text={translationText}
+          placeholder={placeholder}
+          header="Translation"
+          outputTestId={`result-output-${lang}`}
+        />
+      </div>
+    );
+  };
 
 
   return (

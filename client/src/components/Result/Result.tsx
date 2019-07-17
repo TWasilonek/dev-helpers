@@ -10,6 +10,7 @@ interface Props {
   clipboardText?: string,
   placeholder?: string,
   onCopy?: (a: string, b: boolean) => void,
+  outputTestId?: string,
  };
 
  const InlineStyle = () => (
@@ -47,6 +48,7 @@ const Result: SFC<Props> = ({
   clipboardText = '',
   placeholder = '',
   onCopy,
+  outputTestId,
   ...otherProps
 }) => {
   return (
@@ -67,7 +69,7 @@ const Result: SFC<Props> = ({
         </CopyToClipboard>
         <Message.Header data-testid="result-header">{header}</Message.Header>
         {text ? (
-          <pre data-testid="result-output">{text}</pre>
+          <pre data-testid={outputTestId || "result-output"}>{text}</pre>
         ) : (
           <pre data-testid="result-placeholder" className="placeholder">{placeholder}</pre>
         )}
