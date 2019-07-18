@@ -39,12 +39,18 @@ const checkTranslationOutput = (elem: Element, expectedText: string) => {
   expect(elem).toHaveTextContent(expectedText);
 };
 
+const selectFromDropdown = async (dropdownElem: HTMLElement, optionIndex: number) => {
+  fireEvent.click(dropdownElem);
+  await waitForDomChange({ container: dropdownElem })
+  fireEvent.click(dropdownElem.querySelectorAll('.item')[optionIndex]);
+}
+
 describe('Transaltions', () => {
   beforeEach(() => {
     translationApi.getLanguages.mockResolvedValueOnce({ data: [
       {code: "en", name: "English"},
       {code: "es", name: "Spanish"},
-      {code: "am", name: "Amharic"},
+      {code: "pl", name: "Polish"},
     ]});
   });
 
@@ -90,23 +96,13 @@ describe('Transaltions', () => {
       const text = 'Hello';
   
       act(async () => {
-        const targetLangDropdown = getByTestId('target-language-en');
-        fireEvent.click(targetLangDropdown);
-        
-        waitForDomChange({ container: targetLangDropdown })
-          .then(() => {
-            // select spanish, this will change the test id in the result to 'target-language-es'
-            fireEvent.click(targetLangDropdown.querySelectorAll('.item')[1]);
-            fireEvent.change(input, { target: { value: text } });
-            fireEvent.submit(form);
-          })
-          .catch(err => console.log(`Error during click on target lang dopdown: ${err}`))
+        selectFromDropdown(getByTestId('target-language-en'), 1);
+        fireEvent.change(input, { target: { value: text } });
+        fireEvent.submit(form);
       });
 
-  
       await wait(() => getByTestId('result-output-es')); 
-      const result = getByTestId('result-output-es');
-      checkTranslationOutput(result, 'Hola');
+      checkTranslationOutput(getByTestId('result-output-es'), 'Hola');
       expect(translationApi.translate).toHaveBeenCalledTimes(1);
     });
   });
@@ -130,16 +126,28 @@ describe('Transaltions', () => {
         },
       });
 
-      const { addLangBtn, getAllByTestId } = setup();
+      const { addLangBtn, getByTestId, input, form, } = setup();
+      const text = 'Hello';
 
-      act(() => {
+      act(async () => {
+        // set first lang to spanish
+        await selectFromDropdown(getByTestId('target-language-en'), 1);
+        // add second lang
         fireEvent.click(addLangBtn);
-        // TODO: change the result languages to 'es' and 'pl'
-        // submit translations
-      });
+        // set second lang to pl
+        await selectFromDropdown(getByTestId('target-language-en'), 2);
 
-      // check if results are showing
-      expect(true).toBe(false);
+        // type text and submit form
+        fireEvent.change(input, { target: { value: text } });
+        fireEvent.submit(form);
+
+        // check if changes applied
+        await wait(() => getByTestId('result-output-es')); 
+        checkTranslationOutput(getByTestId('result-output-es'), 'Hola');
+        checkTranslationOutput(getByTestId('result-output-pl'), 'Czesc');
+
+        expect(translationApi.translate).toHaveBeenCalledTimes(1);
+      });
     });
   });
 });
