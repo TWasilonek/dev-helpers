@@ -107,13 +107,12 @@ const Translations: SFC = () => {
       search
       searchInput={{ id }}
       data-testid={testId}
+      key={id}
     />
   );
 
   const renderTargetLang = (lang: string, i: number) => {
     const translationText = translations[lang] ? translations[lang].join('\n') : '';
-    // TODO: outputTestId={`result-output-${lang}`} lang = 'en' all the times
-    console.log('lang passed', lang);
     return (
       <div data-testid="target-lang">
         {renderLangDropdown({

@@ -2,12 +2,11 @@ import React from 'react';
 import {
   fireEvent,
   render,
-  waitForElement,
   act,
   cleanup,
   wait,
+  waitForDomChange,
 } from 'react-testing-library';
-import userEvent from "@testing-library/user-event";
 import Translations from './Translations';
 import translationApi from '../../api/translationApi';
 
@@ -80,7 +79,7 @@ describe('Transaltions', () => {
   });
 
   describe('submit translation', () => {
-    test.only('submits correct data and shows response correctly', async () => {
+    test('submits correct data and shows response correctly', async () => {
       translationApi.translate.mockResolvedValueOnce({
         data: {
           es: ['Hola'],
@@ -91,13 +90,19 @@ describe('Transaltions', () => {
       const text = 'Hello';
   
       act(async () => {
-        // select spanish, this will change the test id to 'target-language-es'
-        userEvent.selectOptions(getByTestId('target-language-en'), ['es']);
-        userEvent.type(input, text);
-        fireEvent.submit(form);
+        const targetLangDropdown = getByTestId('target-language-en');
+        fireEvent.click(targetLangDropdown);
+        
+        waitForDomChange({ container: targetLangDropdown })
+          .then(() => {
+            // select spanish, this will change the test id in the result to 'target-language-es'
+            fireEvent.click(targetLangDropdown.querySelectorAll('.item')[1]);
+            fireEvent.change(input, { target: { value: text } });
+            fireEvent.submit(form);
+          })
+          .catch(err => console.log(`Error during click on target lang dopdown: ${err}`))
       });
 
-      // expect(translationApi.translate).toHaveBeenCalledTimes(1);
   
       await wait(() => getByTestId('result-output-es')); 
       const result = getByTestId('result-output-es');
