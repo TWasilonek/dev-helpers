@@ -107,14 +107,13 @@ const Translations: SFC = () => {
       search
       searchInput={{ id }}
       data-testid={testId}
-      key={id}
     />
   );
 
   const renderTargetLang = (lang: string, i: number) => {
     const translationText = translations[lang] ? translations[lang].join('\n') : '';
     return (
-      <div data-testid="target-lang">
+      <div data-testid="target-lang" key={i}>
         {renderLangDropdown({
           id: 'target-language',
           label: 'Target Language',
