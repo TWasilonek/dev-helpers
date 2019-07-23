@@ -1,31 +1,39 @@
-import React, { SFC, Fragment } from 'react';
+import React, { SFC } from 'react';
 import { List } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
-const InlineStyle = () => (
-  <style>{`
-    .ui.horizontal.list.top-nav {
-      margin-top: 30px;
-      margin-bottom: 50px;
-    }
-  `}
-  </style>
-)
+import styles from './TopNav.module.css';
+
+const links = [
+  {
+    href: '/',
+    text: 'Text',
+    exact: true,
+  }, 
+  {
+    href: '/translations',
+    text: 'Translations'
+  }
+];
 
 const TopNav: SFC = () => {
   return (
-    <Fragment>
-      <InlineStyle />
-
-      <List horizontal relaxed className="top-nav">
-        <List.Item active>
-          <Link to="/">Text</Link>
-        </List.Item>
-        <List.Item>
-          <Link to="/translations">Translations</Link>
-        </List.Item>
+    <div className={styles.topNav}>
+      <List horizontal relaxed>
+        {links.map(({ href, text, ...otherProps }) => (
+          <List.Item>
+            <NavLink
+              to={href}
+              className={styles.link}
+              activeClassName={styles.active}
+              {...otherProps}
+            >
+              {text}
+            </NavLink>
+          </List.Item>
+        ))}
       </List>
-    </Fragment>
+    </div>
   )
 };
 

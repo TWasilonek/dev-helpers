@@ -1,0 +1,12 @@
+.topNav {
+  margin-top: 30px;
+  margin-bottom: 50px;
+}
+
+.link {
+  font-size: 18px;
+}
+
+.link.active {
+  font-weight: bold;
+}
