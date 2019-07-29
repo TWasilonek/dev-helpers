@@ -1,4 +1,4 @@
-import React, { SFC, Fragment, useState, useEffect, useRef } from 'react';
+import React, { SFC, Fragment, useState, useEffect } from 'react';
 import { Form, TextArea, Select, Button } from 'semantic-ui-react';
 import Result from '../Result/Result';
 import translationApi, {
