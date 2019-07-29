@@ -8,8 +8,8 @@ import {
   pascalCase,
   createConstant,
   addQuotes,
-  transformLines,
-} from '../stringTransformations';
+  transformLines
+} from './stringTransformations';
 
 describe('String transformations', () => {
   describe('sanitizeSpaces', () => {
@@ -111,7 +111,7 @@ describe('String transformations', () => {
   });
 
   describe('createConstant', () => {
-    const output = 'LOREM_IPSUM = \'loremIpsum\'';
+    const output = "LOREM_IPSUM = 'loremIpsum'";
 
     test('transforms string into a constant key=value pair', () => {
       const input = 'Lorem ipsum';
@@ -125,14 +125,14 @@ describe('String transformations', () => {
 
     test('transforms string into a constant key=value pair as an object prop', () => {
       const input = 'Lorem ipsum';
-      const output = 'LOREM_IPSUM: \'loremIpsum\'';
+      const output = "LOREM_IPSUM: 'loremIpsum'";
 
       expect(createConstant(input, '', true)).toEqual(output);
     });
 
     test('transforms string into a constant key=value pair with a custom endline', () => {
       const input = 'Lorem ipsum';
-      const output = 'LOREM_IPSUM: \'loremIpsum\';';
+      const output = "LOREM_IPSUM: 'loremIpsum';";
 
       expect(createConstant(input, ';', true)).toEqual(output);
     });
@@ -140,7 +140,7 @@ describe('String transformations', () => {
 
   describe('addQuotes', () => {
     const text = 'Lorem ipsum';
-    const single = '\'';
+    const single = "'";
     const double = '"';
 
     test('wraps text in single quotes', () => {
@@ -153,26 +153,28 @@ describe('String transformations', () => {
 
     test('trims spaces in the string', () => {
       const input = '   Lorem ipsum    ';
-      const output = '"Lorem ipsum"'
+      const output = '"Lorem ipsum"';
       expect(addQuotes(input, double)).toEqual(output);
     });
   });
 
   describe('transformLines', () => {
-    const text = 'Lorem ipsum\nDolor sit amet'
+    const text = 'Lorem ipsum\nDolor sit amet';
 
     test('applies addQuotes transformation to each line of text', () => {
       const output = '"Lorem ipsum"\n"Dolor sit amet"';
       expect(transformLines(addQuotes, text, '"')).toEqual(output);
     });
-  
+
     test('applies transformation with one additional argument', () => {
-      const output = 'LOREM_IPSUM = \'loremIpsum\'\nDOLOR_SIT_AMET = \'dolorSitAmet\'';
+      const output =
+        "LOREM_IPSUM = 'loremIpsum'\nDOLOR_SIT_AMET = 'dolorSitAmet'";
       expect(transformLines(createConstant, text)).toEqual(output);
     });
 
     test('applies transformation with more additional arguments', () => {
-      const output = 'LOREM_IPSUM: \'loremIpsum\',\nDOLOR_SIT_AMET: \'dolorSitAmet\',';
+      const output =
+        "LOREM_IPSUM: 'loremIpsum',\nDOLOR_SIT_AMET: 'dolorSitAmet',";
 
       expect(transformLines(createConstant, text, ',', true)).toEqual(output);
     });

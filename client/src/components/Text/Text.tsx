@@ -110,7 +110,7 @@ const InlineStyle = () => (
   </style>
 );
 
-const Text: SFC<Props> = ({ transformations = TRANSFORMATIONS }) => {
+const Text: SFC<Props> = ({ transformations = TRANSFORMATIONS }: Props) => {
   const [text, setText] = useState('');
   const [quotes, setQuotes] = useState(QUOTES_TYPES.NO_QUOTES);
 

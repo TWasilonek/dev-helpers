@@ -50,7 +50,7 @@ const Result: SFC<Props> = ({
   onCopy,
   outputTestId,
   ...otherProps
-}) => {
+}: Props) => {
   return (
     <Fragment>
       <InlineStyle />

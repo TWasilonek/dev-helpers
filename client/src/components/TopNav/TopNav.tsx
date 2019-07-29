@@ -21,7 +21,7 @@ const TopNav: SFC = () => {
     <div className={styles.topNav}>
       <List horizontal relaxed>
         {links.map(({ href, text, ...otherProps }) => (
-          <List.Item>
+          <List.Item key={text}>
             <NavLink
               to={href}
               className={styles.link}

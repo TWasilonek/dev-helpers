@@ -7,7 +7,8 @@ import Text from './components/Text/Text';
 import Translations from './components/Translations/Translations';
 
 const InlineStyle = () => (
-  <style>{`
+  <style>
+    {`
     .ui.container {
       display: flex;
       flex-direction: column;
@@ -15,7 +16,7 @@ const InlineStyle = () => (
     }
   `}
   </style>
-)
+);
 
 const Routes = () => (
   <div>
@@ -27,7 +28,7 @@ const Routes = () => (
         <Route exact path="/" component={Text} />
         <Route exact path="/translations" component={Translations} />
       </Switch>
-    </Container>      
+    </Container>
   </div>
 );
 
