@@ -79,7 +79,8 @@ const InlineStyle = () => (
   <style>
     {`
     .section-wrapper {
-      width: 100%;
+      max-width: 1000px;
+      padding-bottom: 60px;
     }
     .inputs-wrapper {
       margin-bottom: 1rem;
@@ -90,21 +91,25 @@ const InlineStyle = () => (
     .results-wrapper {
       display: flex;
       flex-wrap: wrap;
-      justify-content: flex-start;
-      padding-top: 30px;
+      justify-content: start;
+      padding-bottom: 30px;
     }
-    .ui.message.text-result {
-      width: 30%;
+    .ui.message.result.text-result {
+      width: 47%;
       position: relative;
-      margin: 0 3% 1rem 0;
       min-height: 6rem;
     }
-    .ui.message.text-result:last-child {
-      margin-top: 0;
-      margin-bottom: 1rem;
+
+    @media only screen and (max-width: 1000px) {
+      .ui.message.result.text-result {
+        width: 100%;
+      }
     }
-    .ui.message.text-result:nth-of-type(3) {
-      margin-right: 0;
+
+    @media only screen and (max-width: 600px) {
+      .ui.message.result.text-result {
+        margin: 0 0 20px 0;
+      }
     }
   `}
   </style>
