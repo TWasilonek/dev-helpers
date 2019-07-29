@@ -8,8 +8,8 @@ const links = [
   {
     href: '/',
     text: 'Text',
-    exact: true,
-  }, 
+    exact: true
+  },
   {
     href: '/translations',
     text: 'Translations'
@@ -34,8 +34,7 @@ const TopNav: SFC = () => {
         ))}
       </List>
     </div>
-  )
+  );
 };
 
 export default TopNav;
-

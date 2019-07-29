@@ -1,8 +1,14 @@
 import React, { SFC, Fragment, useState, useEffect, useRef } from 'react';
 import { Form, TextArea, Select, FormFieldProps } from 'semantic-ui-react';
 import Result from '../Result/Result';
-import translationApi, { TranslationData, GetLanguagesType } from '../../api/translationApi';
-import { transformLines, sanitizeSpaces } from '../../utils/stringTransformations';
+import translationApi, {
+  TranslationData,
+  GetLanguagesType
+} from '../../api/translationApi';
+import {
+  transformLines,
+  sanitizeSpaces
+} from '../../utils/stringTransformations';
 
 const InlineStyle = () => (
   <style>
@@ -26,14 +32,20 @@ const InlineStyle = () => (
   </style>
 );
 
-const mapOptions = (data: GetLanguagesType[]) => data.map(el => ({
-  text: el.name,
-  value: el.code,
-  key:  el.code,
-}));
+const mapOptions = (data: GetLanguagesType[]) =>
+  data.map(el => ({
+    text: el.name,
+    value: el.code,
+    key: el.code
+  }));
 
-type EventData = { name: string; value: string };
-interface TranslationsState { [lang: string]: string[] };
+interface EventData {
+  name: string;
+  value: string;
+}
+interface TranslationsState {
+  [lang: string]: string[];
+}
 
 const Translations: SFC = () => {
   const placeholder = 'Bienvenido';
@@ -42,7 +54,9 @@ const Translations: SFC = () => {
   const [sourceLang, setSourceLang] = useState('');
   const [targetLangs, setTargetLangs] = useState(['en']);
 
-  const [langOptions, setlangOptions] = useState<GetLanguagesType[] | any[]>([]);
+  const [langOptions, setlangOptions] = useState<GetLanguagesType[] | any[]>(
+    []
+  );
   useEffect(() => {
     async function getSourceLanguagesList() {
       const response = await translationApi.getLanguages();
@@ -55,21 +69,18 @@ const Translations: SFC = () => {
   const postTranslations = async (data: TranslationData) => {
     const result = await translationApi.translate(data);
     setTranslations({ ...result.data });
-  }
+  };
 
   const handleSubmit = () => {
     const strings = transformLines(sanitizeSpaces, sourceText);
     const data: TranslationData = {
       strings: [strings],
-      langs: [...targetLangs],
+      langs: [...targetLangs]
     };
     postTranslations(data);
   };
 
-  const handleChange = (
-    e: Event,
-    { name, value }: EventData
-  ) => {
+  const handleChange = (e: Event, { name, value }: EventData) => {
     setSourceText(value);
   };
 
@@ -85,17 +96,27 @@ const Translations: SFC = () => {
       return lang;
     });
     setTargetLangs(newLangs);
-  }
+  };
 
   const handleAddTargeLang = () => {
-    setTargetLangs([...targetLangs, 'en']); 
-  }
+    setTargetLangs([...targetLangs, 'en']);
+  };
 
-  const renderLangDropdown = (
-    { id, label, placeholder, defaultValue, testId, ...otherProps } : { 
-      id: string, label: string, placeholder: string, defaultValue: string, testId?: string, onChange?: Function,
-    }
-  ) => (
+  const renderLangDropdown = ({
+    id,
+    label,
+    placeholder,
+    defaultValue,
+    testId,
+    ...otherProps
+  }: {
+    id: string;
+    label: string;
+    placeholder: string;
+    defaultValue: string;
+    testId?: string;
+    onChange?: Function;
+  }) => (
     <Form.Field
       {...otherProps}
       loading={!langOptions.length}
@@ -111,7 +132,9 @@ const Translations: SFC = () => {
   );
 
   const renderTargetLang = (lang: string, i: number) => {
-    const translationText = translations[lang] ? translations[lang].join('\n') : '';
+    const translationText = translations[lang]
+      ? translations[lang].join('\n')
+      : '';
     return (
       <div data-testid="target-lang" key={i}>
         {renderLangDropdown({
@@ -119,7 +142,8 @@ const Translations: SFC = () => {
           label: 'Target Language',
           placeholder: 'Select language',
           defaultValue: lang,
-          onChange: (e: Event, data: EventData) => hadleTargateLangChange(data, i),
+          onChange: (e: Event, data: EventData) =>
+            hadleTargateLangChange(data, i),
           testId: `target-language-${lang}`
         })}
         <Result
@@ -133,7 +157,6 @@ const Translations: SFC = () => {
       </div>
     );
   };
-
 
   return (
     <Fragment>

@@ -7,13 +7,13 @@ const FAKE_TRANSFORMATIONS: ITransformation[] = [
   {
     name: 'UPPERCASE',
     transformation: (str: string) => str.toUpperCase(),
-    addQuotes: true,
+    addQuotes: true
   },
   {
     name: 'lowercase',
     transformation: (str: string) => str.toLowerCase(),
-    addQuotes: true,
-  },
+    addQuotes: true
+  }
 ];
 
 const setup = () => {
@@ -31,7 +31,7 @@ const setup = () => {
     noQuotesSwitch,
     singleQuotesSwitch,
     doubleQuotesSwitch,
-    ...utils,
+    ...utils
   };
 };
 

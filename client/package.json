@@ -24,20 +24,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "cypress": "cypress open"
+    "lint": "eslint './src/**/*.{ts,tsx}'",
+    "lint:fix": "eslint './src/**/*.{ts,tsx}' --fix"
   },
-  "eslintConfig": {
-    "extends": "react-app",
-    "plugins": [
-      "cypress"
-    ],
-    "env": {
-      "cypress/globals": true
-    }
-  },
-  "eslintIgnore": [
-    "cypress/integration/examples/*"
-  ],
   "browserslist": [
     ">0.2%",
     "not dead",
@@ -47,8 +36,13 @@
   "devDependencies": {
     "@testing-library/user-event": "^4.1.0",
     "@types/react-copy-to-clipboard": "^4.2.6",
+    "@typescript-eslint/eslint-plugin": "^1.13.0",
+    "@typescript-eslint/parser": "^1.13.0",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-config-react": "^1.1.7",
+    "eslint-plugin-prettier": "^3.1.0",
     "jest-dom": "^3.4.0",
-    "react-testing-library": "^7.0.0",
-    "tslint-eslint-rules": "^5.4.0"
+    "prettier": "^1.18.2",
+    "react-testing-library": "^7.0.0"
   }
 }

@@ -1,3 +1,3 @@
 export default {
-  translate: jest.fn(),
+  translate: jest.fn()
 };

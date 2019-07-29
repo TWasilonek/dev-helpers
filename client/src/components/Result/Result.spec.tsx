@@ -9,7 +9,7 @@ const PLACEHOLDER = 'placeholder';
 
 const setup = ({
   textString,
-  placeholderString,
+  placeholderString
 }: {
   textString?: string;
   placeholderString?: string;
@@ -21,7 +21,7 @@ const setup = ({
 
   return {
     title,
-    ...utils,
+    ...utils
   };
 };
 
@@ -39,7 +39,7 @@ describe('Result', () => {
   test('when no text is passed, it shows the placeholder', () => {
     const { getByTestId } = setup({
       textString: '',
-      placeholderString: PLACEHOLDER,
+      placeholderString: PLACEHOLDER
     });
     const placeholder = getByTestId('result-placeholder');
 

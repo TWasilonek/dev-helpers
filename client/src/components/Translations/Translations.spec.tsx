@@ -5,7 +5,7 @@ import {
   act,
   cleanup,
   wait,
-  waitForDomChange,
+  waitForDomChange
 } from 'react-testing-library';
 import Translations from './Translations';
 import translationApi from '../../api/translationApi';
@@ -28,7 +28,7 @@ const setup = () => {
     sourceLangSelect,
     targetLangSelect,
     addLangBtn,
-    ...utils,
+    ...utils
   };
 };
 
@@ -39,19 +39,24 @@ const checkTranslationOutput = (elem: Element, expectedText: string) => {
   expect(elem).toHaveTextContent(expectedText);
 };
 
-const selectFromDropdown = async (dropdownElem: HTMLElement, optionIndex: number) => {
+const selectFromDropdown = async (
+  dropdownElem: HTMLElement,
+  optionIndex: number
+) => {
   fireEvent.click(dropdownElem);
-  await waitForDomChange({ container: dropdownElem })
+  await waitForDomChange({ container: dropdownElem });
   fireEvent.click(dropdownElem.querySelectorAll('.item')[optionIndex]);
-}
+};
 
 describe('Transaltions', () => {
   beforeEach(() => {
-    translationApi.getLanguages.mockResolvedValueOnce({ data: [
-      {code: "en", name: "English"},
-      {code: "es", name: "Spanish"},
-      {code: "pl", name: "Polish"},
-    ]});
+    translationApi.getLanguages.mockResolvedValueOnce({
+      data: [
+        { code: 'en', name: 'English' },
+        { code: 'es', name: 'Spanish' },
+        { code: 'pl', name: 'Polish' }
+      ]
+    });
   });
 
   test('shows the input with placeholder text', () => {
@@ -74,7 +79,7 @@ describe('Transaltions', () => {
       });
       const options = dropdownElem.querySelectorAll('[role=option]');
       expect(options).toHaveLength(length);
-    }
+    };
 
     const { getByTestId, form } = setup();
     await wait(() => form.querySelector('.dropdown:not(.loading)'));
@@ -88,20 +93,20 @@ describe('Transaltions', () => {
     test('submits correct data and shows response correctly', async () => {
       translationApi.translate.mockResolvedValueOnce({
         data: {
-          es: ['Hola'],
-        },
+          es: ['Hola']
+        }
       });
-  
+
       const { input, form, getByTestId } = setup();
       const text = 'Hello';
-  
+
       act(async () => {
         selectFromDropdown(getByTestId('target-language-en'), 1);
         fireEvent.change(input, { target: { value: text } });
         fireEvent.submit(form);
       });
 
-      await wait(() => getByTestId('result-output-es')); 
+      await wait(() => getByTestId('result-output-es'));
       checkTranslationOutput(getByTestId('result-output-es'), 'Hola');
       expect(translationApi.translate).toHaveBeenCalledTimes(1);
     });
@@ -122,14 +127,15 @@ describe('Transaltions', () => {
       translationApi.translate.mockResolvedValueOnce({
         data: {
           es: ['Hola'],
-          pl: ['Czesc'],
-        },
+          pl: ['Czesc']
+        }
       });
 
-      const { addLangBtn, getByTestId, input, form, } = setup();
+      const { addLangBtn, getByTestId, input, form } = setup();
       const text = 'Hello';
 
       act(async () => {
+        // TODO: fix target lang id's to never change (ise index for example?)
         // set first lang to spanish
         await selectFromDropdown(getByTestId('target-language-en'), 1);
         // add second lang
@@ -142,7 +148,7 @@ describe('Transaltions', () => {
         fireEvent.submit(form);
 
         // check if changes applied
-        await wait(() => getByTestId('result-output-es')); 
+        await wait(() => getByTestId('result-output-es'));
         checkTranslationOutput(getByTestId('result-output-es'), 'Hola');
         checkTranslationOutput(getByTestId('result-output-pl'), 'Czesc');
 

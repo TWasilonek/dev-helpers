@@ -11,67 +11,68 @@ import {
   pascalCase,
   addQuotes,
   transformLines,
-  createConstant,
+  createConstant
 } from '../../utils/stringTransformations';
 import { QUOTES_TYPES, PLACEHOLDER_TEXT } from '../../constants';
 import Result from '../Result/Result';
 
 export interface ITransformation {
-  name: string,
-  transformation: Function,
-  addQuotes: boolean
+  name: string;
+  transformation: Function;
+  addQuotes: boolean;
 }
 
 interface Props {
-  transformations: ITransformation[],
- }
+  transformations: ITransformation[];
+}
 
 const TRANSFORMATIONS = [
   {
     name: 'UPPERCASE',
     transformation: (str: string) => transformLines(toUpperCase, str),
-    addQuotes: true,
+    addQuotes: true
   },
   {
     name: 'lowercase',
     transformation: (str: string) => transformLines(toLowerCase, str),
-    addQuotes: true,
+    addQuotes: true
   },
   {
     name: 'Capitalize first word',
     transformation: (str: string) => transformLines(capitalize, str),
-    addQuotes: true,
+    addQuotes: true
   },
   {
     name: 'Capitalize All Words',
     transformation: (str: string) => transformLines(capitalizeAll, str),
-    addQuotes: true,
+    addQuotes: true
   },
   {
     name: 'snake_case',
     transformation: (str: string) => transformLines(snakeCase, str),
-    addQuotes: true,
+    addQuotes: true
   },
   {
     name: 'camelCase',
     transformation: (str: string) => transformLines(camelCase, str),
-    addQuotes: true,
+    addQuotes: true
   },
   {
     name: 'PascalCase',
     transformation: (str: string) => transformLines(pascalCase, str),
-    addQuotes: true,
+    addQuotes: true
   },
   {
     name: 'constant notation',
     transformation: (str: string) => transformLines(createConstant, str),
-    addQuotes: false,
+    addQuotes: false
   },
   {
     name: 'constant notation in a map',
-    transformation: (str: string) => transformLines(createConstant, str, ',', true),
-    addQuotes: false,
-  },
+    transformation: (str: string) =>
+      transformLines(createConstant, str, ',', true),
+    addQuotes: false
+  }
 ];
 
 const InlineStyle = () => (
@@ -113,9 +114,15 @@ const Text: SFC<Props> = ({ transformations = TRANSFORMATIONS }) => {
   const [text, setText] = useState('');
   const [quotes, setQuotes] = useState(QUOTES_TYPES.NO_QUOTES);
 
-  function transformText(text: string, transformation: Function, shouldAddQuotes: boolean | undefined): string {
+  function transformText(
+    text: string,
+    transformation: Function,
+    shouldAddQuotes: boolean | undefined
+  ): string {
     const transformedText = transformation(text);
-    return shouldAddQuotes ? transformLines(addQuotes, transformedText, quotes) : transformedText;
+    return shouldAddQuotes
+      ? transformLines(addQuotes, transformedText, quotes)
+      : transformedText;
   }
 
   return (
@@ -138,7 +145,7 @@ const Text: SFC<Props> = ({ transformations = TRANSFORMATIONS }) => {
           <Form.Group inline data-testid="quotes-input">
             <label>Quotes type</label>
             <Form.Radio
-              label='No quotes'
+              label="No quotes"
               id="no-quotes"
               name="quotes"
               value={QUOTES_TYPES.NO_QUOTES}
@@ -146,7 +153,7 @@ const Text: SFC<Props> = ({ transformations = TRANSFORMATIONS }) => {
               onChange={() => setQuotes(QUOTES_TYPES.NO_QUOTES)}
             />
             <Form.Radio
-              label='Single quotes'
+              label="Single quotes"
               id="single-quotes"
               name="quotes"
               value={QUOTES_TYPES.SINGLE}
@@ -154,7 +161,7 @@ const Text: SFC<Props> = ({ transformations = TRANSFORMATIONS }) => {
               onChange={() => setQuotes(QUOTES_TYPES.SINGLE)}
             />
             <Form.Radio
-              label='Double quotes'
+              label="Double quotes"
               id="double-quotes"
               name="quotes"
               value={QUOTES_TYPES.DOUBLE}
@@ -167,12 +174,16 @@ const Text: SFC<Props> = ({ transformations = TRANSFORMATIONS }) => {
         <div className="results-wrapper">
           {transformations.map((res: ITransformation) => {
             const baseText = text || PLACEHOLDER_TEXT;
-            const outputText = transformText(baseText, res.transformation, res.addQuotes);
+            const outputText = transformText(
+              baseText,
+              res.transformation,
+              res.addQuotes
+            );
 
             return (
               <Result
                 className="text-result"
-                clipboardText={(text ? outputText : '')}
+                clipboardText={text ? outputText : ''}
                 text={text ? outputText : ''}
                 placeholder={text ? '' : outputText}
                 header={res.name}

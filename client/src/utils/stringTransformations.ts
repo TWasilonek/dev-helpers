@@ -1,6 +1,6 @@
 export const sanitizeSpaces = (str: string): string => {
   return str.trim().replace(/\s\s+/g, ' ');
-}
+};
 
 export const toUpperCase = (str: string): string => {
   return str.trim().toUpperCase();
@@ -38,7 +38,11 @@ export const pascalCase = (str: string): string => {
   return words.map(word => capitalize(word.toLowerCase())).join('');
 };
 
-export const createConstant = (str: string, endingSign: string = '', isObjectProp: boolean = false): string => {
+export const createConstant = (
+  str: string,
+  endingSign: string = '',
+  isObjectProp: boolean = false
+): string => {
   const words = sanitizeSpaces(str.trim()).split(' ');
   const key = words.map(word => word.toUpperCase()).join('_');
   const value = camelCase(str);
@@ -50,11 +54,15 @@ export const createConstant = (str: string, endingSign: string = '', isObjectPro
 export const addQuotes = (str: string, quotes: string): string => {
   const trimmed = str.trim();
   return `${quotes}${trimmed}${quotes}`;
-}
+};
 
-export const transformLines = (transformation: Function, str: string, ...args: any) => {
+export const transformLines = (
+  transformation: Function,
+  str: string,
+  ...args: any
+) => {
   return str
     .split('\n')
     .map(line => transformation(line, ...args))
     .join('\n');
-}
+};

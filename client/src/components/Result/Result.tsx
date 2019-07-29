@@ -4,16 +4,16 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import classNames from 'classnames';
 
 interface Props {
-  className?: string,
-  header?: string,
-  text?: string,
-  clipboardText?: string,
-  placeholder?: string,
-  onCopy?: (a: string, b: boolean) => void,
-  outputTestId?: string,
- };
+  className?: string;
+  header?: string;
+  text?: string;
+  clipboardText?: string;
+  placeholder?: string;
+  onCopy?: (a: string, b: boolean) => void;
+  outputTestId?: string;
+}
 
- const InlineStyle = () => (
+const InlineStyle = () => (
   <style>
     {`
     .ui.message.result {
@@ -69,13 +69,15 @@ const Result: SFC<Props> = ({
         </CopyToClipboard>
         <Message.Header data-testid="result-header">{header}</Message.Header>
         {text ? (
-          <pre data-testid={outputTestId || "result-output"}>{text}</pre>
+          <pre data-testid={outputTestId || 'result-output'}>{text}</pre>
         ) : (
-          <pre data-testid="result-placeholder" className="placeholder">{placeholder}</pre>
+          <pre data-testid="result-placeholder" className="placeholder">
+            {placeholder}
+          </pre>
         )}
       </Message>
     </Fragment>
   );
-}
+};
 
 export default Result;
