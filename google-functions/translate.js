@@ -40,9 +40,7 @@ exports.translateText = async (req, res) => {
 
     try {
       const translations = await Promise.all(langs.map(lang => makeTranslations(strings, lang)));
-      console.log('translations', translations);
       const response = langs.reduce((acc, lang, i) => ({ ...acc, [lang]: translations[i] }), {});
-      console.log('response', response);
       res.status(200).send(response);
     } catch(e){
       console.error(e);
