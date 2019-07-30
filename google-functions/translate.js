@@ -31,11 +31,11 @@ exports.translateText = async (req, res) => {
     const { langs, strings } = req.body;
 
     if (!langs || !langs.length) {
-      res.status(500).send('Missing "langs"');
+      res.status(400).send('Missing "langs"');
     }
 
     if (!strings) {
-      res.status(500).send('Missing "strings"');
+      res.status(400).send('Missing "strings"');
     }
 
     try {
