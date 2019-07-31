@@ -90,19 +90,17 @@ const Translations: SFC = () => {
   const placeholder = 'Bienvenido';
   const [sourceText, setSourceText] = useState('');
   const [translations, setTranslations] = useState<TranslationsState>({});
-  const [sourceLang, setSourceLang] = useState('');
   const [targetLangs, setTargetLangs] = useState(['en']);
-
   const [langOptions, setlangOptions] = useState<GetLanguagesType[] | any[]>(
     []
   );
   useEffect(() => {
-    async function getSourceLanguagesList() {
+    async function geLanguagesList() {
       const response = await translationApi.getLanguages();
       const options = response ? mapOptions(response.data) : [];
       setlangOptions(options);
     }
-    getSourceLanguagesList();
+    geLanguagesList();
   }, []);
 
   const postTranslations = async (data: TranslationData) => {
@@ -121,10 +119,6 @@ const Translations: SFC = () => {
 
   const handleSourceTextChange = (e: Event, { name, value }: EventData) => {
     setSourceText(value);
-  };
-
-  const handleSourceLangChange = ({ name, value }: EventData) => {
-    setSourceLang(value);
   };
 
   const hadleTargateLangChange = (
@@ -213,15 +207,6 @@ const Translations: SFC = () => {
           data-testid="translation-form"
           onSubmit={handleSubmit}
         >
-          {renderLangDropdown({
-            id: 'source-language',
-            label: 'Source Language',
-            placeholder: 'Select language',
-            onChange: (e: Event, data: EventData) =>
-              handleSourceLangChange(data),
-            defaultValue: 'en',
-            testId: 'source-language'
-          })}
           <Form.Field
             control={TextArea}
             label="Text to translate"

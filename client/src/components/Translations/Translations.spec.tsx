@@ -18,14 +18,12 @@ const setup = () => {
 
   const form = utils.getByTestId('translation-form');
   const input = utils.getByLabelText('Text to translate');
-  const sourceLangSelect = utils.getByLabelText('Source Language');
   const targetLangSelect = utils.getByLabelText('Target Language');
   const addLangBtn = utils.getByText('Add target language');
 
   return {
     form,
     input,
-    sourceLangSelect,
     targetLangSelect,
     addLangBtn,
     ...utils
@@ -85,7 +83,6 @@ describe('Transaltions', () => {
     await wait(() => form.querySelector('.dropdown:not(.loading)'));
 
     expect(translationApi.getLanguages).toHaveBeenCalled();
-    testLangDropdown(getByTestId('source-language'), 3);
     testLangDropdown(getByTestId('target-language-en'), 3);
   });
 
