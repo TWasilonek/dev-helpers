@@ -2,6 +2,7 @@ import {
   sanitizeSpaces,
   toUpperCase,
   toLowerCase,
+  capitalize,
   capitalizeAll,
   snakeCase,
   camelCase,
@@ -54,12 +55,30 @@ describe('String transformations', () => {
     });
   });
 
+  describe('capitalize', () => {
+    const output = 'Lorem ipsum dolor';
+
+    test('capitalizes first word in a string, and lowercases the rest', () => {
+      const input1 = 'lorem ipsum dolor';
+      const input2 = 'LOREM IPSUM DOLOR';
+      expect(capitalize(input1)).toEqual(output);
+      expect(capitalize(input2)).toEqual(output);
+    });
+
+    test('trims spaces in the string', () => {
+      const input = '   lorem ipsum dolor  ';
+      expect(capitalize(input)).toEqual(output);
+    });
+  });
+
   describe('capitalizeAll', () => {
     const output = 'Lorem Ipsum Dolor';
 
-    test('capitalizes all words in a string', () => {
-      const input = 'lorem ipsum dolor';
-      expect(capitalizeAll(input)).toEqual(output);
+    test('capitalizes all words in a string, lowercases the rest', () => {
+      const input1 = 'lorem ipsum dolor';
+      const input2 = 'LOREM IPSUM DOLOR';
+      expect(capitalizeAll(input1)).toEqual(output);
+      expect(capitalizeAll(input2)).toEqual(output);
     });
 
     test('trims spaces in the string', () => {

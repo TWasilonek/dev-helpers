@@ -12,7 +12,7 @@ export const toLowerCase = (str: string): string => {
 
 export const capitalize = (str: string): string => {
   const trimmed = str.trim();
-  return trimmed.substr(0, 1).toUpperCase() + trimmed.substr(1);
+  return trimmed.substr(0, 1).toUpperCase() + trimmed.substr(1).toLowerCase();
 };
 
 export const capitalizeAll = (str: string): string => {
